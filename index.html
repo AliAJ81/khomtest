@@ -1,0 +1,2351 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خمسیلیزیشن | Khomsilization</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.2.8/dist/jalaali.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+:root {
+  font-family:"Vazirmatn",sans-serif;
+  color-scheme:light;
+  --bg:#f4f6fa;
+  --surface:#fff;
+  --surface2:#f8fafc;
+  --text:#172033;
+  --muted:#7c8799;
+  --border:#e6eaf0;
+  --primary:#229ED9;
+  --primarySoft:#E7F5FC;
+  --green:#15966b;
+  --greenSoft:#e6f7f0;
+  --red:#d64f63;
+  --redSoft:#fff0f1;
+  --orange:#bd7c27;
+  --orangeSoft:#fff5e6;
+  --shadow:0 12px 35px rgba(26,36,61,.055);
+  --radius:18px;
+}
+[data-theme="dark"] {
+  color-scheme:dark;
+  --bg:#202938;
+  --surface:#2b3748;
+  --surface2:#354356;
+  --text:#f1f5fa;
+  --muted:#b2bfce;
+  --border:#46566b;
+  --primary:#59b9e8;
+  --primarySoft:#294c63;
+  --green:#50c99b;
+  --greenSoft:#193d34;
+  --red:#ff7b8d;
+  --redSoft:#452832;
+  --orange:#e5b46e;
+  --orangeSoft:#463722;
+  --shadow:0 12px 35px rgba(0,0,0,.18);
+}
+[data-theme="sepia"] {
+  color-scheme:light;
+  --bg:#eeede7;
+  --surface:#fbfaf6;
+  --surface2:#f4f3ed;
+  --text:#3f454b;
+  --muted:#858b8f;
+  --border:#e2e1da;
+  --primary:#229ED9;
+  --primarySoft:#e6f2f8;
+  --green:#4e896a;
+  --greenSoft:#e8f0e9;
+  --red:#b85f62;
+  --redSoft:#f6e9e8;
+  --orange:#a98754;
+  --orangeSoft:#f2eee4;
+  --shadow:0 12px 35px rgba(78,55,29,.07);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"Vazirmatn",sans-serif;transition:.25s
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app-shell{width:min(1440px,100%);margin:auto;padding:28px}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:20px;margin-bottom:28px;flex-wrap:wrap
+}
+.brand h1{font-size:clamp(23px,3vw,34px);margin:0;font-weight:800}
+.brand-title{display:flex;align-items:center;gap:10px;direction:rtl}
+.brand-fa{white-space:nowrap}
+.brand-separator{color:var(--muted);font-weight:500}
+.brand-en{color:var(--primary);font-size:.72em;white-space:nowrap}
+.brand p{margin:7px 0 0;color:var(--muted);font-size:13px}
+.top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.theme-select,.btn{
+  border:1px solid var(--border);border-radius:12px;
+  padding:10px 14px;background:var(--surface);color:var(--text);transition:.2s
+}
+.btn:hover,.theme-select:hover{transform:translateY(-1px)}
+.btn-primary{color:white;background:var(--primary);border-color:var(--primary)}
+.btn-soft{background:var(--primarySoft);border-color:transparent;color:var(--primary)}
+.btn-danger{color:var(--red);background:var(--redSoft);border-color:transparent}
+.btn-excel{color:#fff;background:#217346;border-color:#217346;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.btn-excel:hover{background:#185c38;border-color:#185c38}
+.excel-icon{width:17px;height:17px;display:inline-block;flex:none}
+.tx-type{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700}
+.tx-type-deposit{color:#16845b;background:#e4f5ec;border:1px solid #c9ead9}
+.tx-type-withdrawal{color:#c34d5c;background:#fff0f1;border:1px solid #f5d4d8}
+.btn-small{padding:6px 10px;border-radius:9px;font-size:12px}
+.nav-tabs{
+  display:flex;gap:7px;padding:7px;border:1px solid var(--border);
+  border-radius:15px;background:var(--surface);width:fit-content;
+  max-width:100%;overflow-x:auto;margin-bottom:25px
+}
+.nav-tab{
+  white-space:nowrap;border:0;padding:10px 18px;border-radius:10px;
+  color:var(--muted);background:transparent;font-weight:600
+}
+.nav-tab.active{background:var(--primarySoft);color:var(--primary)}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.section-heading{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:15px;margin:25px 0 16px;flex-wrap:wrap
+}
+.section-heading h2{margin:0;font-size:19px;font-weight:800}
+.section-heading p{color:var(--muted);margin:5px 0 0;font-size:12px}
+.grid{display:grid;gap:16px}
+.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0
+}
+.stat-card{position:relative;overflow:hidden}
+.stat-card:after{
+  content:"";position:absolute;width:90px;height:90px;border-radius:50%;
+  background:var(--primarySoft);left:-35px;bottom:-48px;opacity:.7
+}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:12px}
+.stat-value{
+  font-size:clamp(19px,2.5vw,27px);font-weight:800;
+  direction:ltr;text-align:right;overflow-wrap:anywhere
+}
+.stat-foot{color:var(--muted);font-size:11px;margin-top:8px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:750px;font-size:13px}
+th,td{padding:14px 13px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;white-space:nowrap}
+th{background:var(--surface2);color:var(--muted);font-size:11px;font-weight:700}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface2)}
+.money{direction:ltr;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.muted{color:var(--muted)}
+.positive{color:var(--green)}
+.negative{color:var(--red)}
+.status{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 9px;
+  border-radius:20px;font-size:11px;font-weight:600;
+  background:var(--orangeSoft);color:var(--orange)
+}
+.status.ok{color:var(--green);background:var(--greenSoft)}
+.status.bad{color:var(--red);background:var(--redSoft)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{min-width:0}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:600}
+.field input,.field select{
+  width:100%;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface2);color:var(--text);padding:11px 12px;
+  outline:none;transition:.2s;min-width:0
+}
+.field input:focus,.field select:focus{
+  border-color:var(--primary);box-shadow:0 0 0 3px rgba(101,88,211,.13)
+}
+.field small{display:block;color:var(--muted);margin-top:5px;font-size:10px}
+.date-input{cursor:pointer!important}
+.date-input:hover{border-color:var(--primary)!important}
+.form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.inflation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.month-field{padding:13px;background:var(--surface2);border:1px solid var(--border);border-radius:13px}
+.month-field label{display:block;margin-bottom:8px;font-size:12px;font-weight:700}
+.month-field input{
+  width:100%;min-width:0;border:1px solid var(--border);background:var(--surface);
+  color:var(--text);border-radius:9px;padding:9px;direction:ltr;text-align:left;outline:none
+}
+.season-title{grid-column:1/-1;color:var(--primary);font-weight:800;margin-top:8px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.portfolio-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.portfolio-card{transition:.2s;cursor:pointer}
+.portfolio-card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.portfolio-card h3{margin:0 0 7px;font-size:16px}
+.portfolio-card .sub{font-size:11px;color:var(--muted)}
+.portfolio-card .amount{margin-top:18px;font-size:19px;font-weight:800;direction:ltr;text-align:right}
+.empty{padding:35px 15px;text-align:center;color:var(--muted);font-size:13px}
+.empty .emoji{font-size:30px;margin-bottom:8px}
+.notice{padding:13px 15px;border-radius:12px;background:var(--orangeSoft);color:var(--orange);font-size:12px;line-height:1.9;margin:14px 0}
+.notice.info{background:var(--primarySoft);color:var(--primary)}
+.notice.success{background:var(--greenSoft);color:var(--green)}
+.detail-header{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}
+.detail-header h2{margin:0}
+.detail-actions{display:flex;gap:8px;flex-wrap:wrap}
+.divider{border:0;border-top:1px solid var(--border);margin:20px 0}
+.toast-container{position:fixed;left:22px;bottom:22px;z-index:1000;display:grid;gap:9px}
+.toast{background:var(--text);color:var(--surface);padding:12px 17px;border-radius:12px;box-shadow:var(--shadow);font-size:12px;max-width:min(360px,calc(100vw - 44px));animation:appear .2s ease}
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(8,12,24,.55);
+  display:none;align-items:center;justify-content:center;padding:18px;z-index:500
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:min(650px,100%);max-height:90vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.25);
+  animation:appear .2s ease
+}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.modal-head h3{margin:0}
+.close-btn{border:0;background:var(--surface2);color:var(--text);border-radius:9px;width:34px;height:34px;font-size:19px}
+.hidden{display:none!important}
+.date-picker-box{width:min(420px,100%)}
+.date-picker-box .field{margin-bottom:15px}
+.date-picker-box select{width:100%;padding:12px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);color:var(--text);font-family:inherit}
+.date-picker-box select:disabled{opacity:.45;cursor:not-allowed}
+footer{text-align:center;color:var(--muted);font-size:10px;padding:30px 0 10px}
+@media(max-width:950px){
+  .stats-grid,.portfolio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .inflation-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .app-shell{padding:16px}
+  .stats-grid,.portfolio-grid,.form-grid{grid-template-columns:1fr}
+  .inflation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .topbar{align-items:flex-start}
+  .top-actions{width:100%}
+  .theme-select{flex:1}
+  .nav-tabs{width:100%}
+  .card{padding:16px}
+}
+
+.khums-clickable{cursor:pointer;transition:.2s}
+.khums-clickable:hover{transform:translateY(-3px);border-color:var(--primary)}
+.portfolio-khums{margin-top:13px;padding:10px 12px;border-radius:11px;background:var(--greenSoft);display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px}
+.portfolio-khums strong{color:var(--green);font-size:13px;direction:ltr}
+.khums-report-list{display:grid;gap:10px;margin-top:18px}
+.khums-report-card{border:1px solid var(--border);background:var(--surface2);border-radius:13px;padding:13px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.khums-report-card .report-name{font-weight:800;font-size:13px}
+.khums-report-card .report-value{font-weight:800;color:var(--green);direction:ltr}
+.khums-report-actions{display:flex;gap:6px;flex-wrap:wrap}
+.khums-donut-wrap{display:flex;justify-content:center;align-items:center;min-height:210px}
+.khums-donut{width:190px;height:190px;border-radius:50%;position:relative;display:grid;place-items:center}
+.khums-donut:after{content:"";position:absolute;width:112px;height:112px;border-radius:50%;background:var(--surface)}
+.khums-donut-center{position:absolute;z-index:1;text-align:center;font-size:11px;color:var(--muted)}
+.khums-donut-center strong{display:block;font-size:17px;color:var(--text)}
+.khums-legend{display:grid;gap:7px;margin-top:10px}
+.khums-legend-item{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px}
+.khums-legend-label{display:flex;align-items:center;gap:7px;min-width:0}
+.khums-legend-dot{width:10px;height:10px;border-radius:3px;flex:none}
+.khums-legend-value{direction:ltr;white-space:nowrap;font-weight:700}
+@media(max-width:800px){#khumsReport>.grid{grid-template-columns:1fr!important}}
+
+</style>
+</head>
+
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <div class="brand">
+    <h1 class="brand-title" dir="rtl"><span class="brand-fa">خمسیلیزیشن</span><span class="brand-separator">|</span><span class="brand-en" dir="ltr">Khomsilization</span></h1>
+    <p>پیش به سوی خمس‌های میلیاردی 🚀🔥</p>
+  </div>
+  <div class="top-actions">
+    <select class="theme-select" id="themeSelect" aria-label="انتخاب تم">
+      <option value="light">تم روشن</option>
+      <option value="dark">تم تاریک</option>
+      <option value="sepia">تم مطالعه</option>
+    </select>
+    <button class="btn btn-excel" onclick="exportAllPortfoliosToExcel()"><svg class="excel-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 2h6a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-6z"/><path fill="#185C37" d="M2 5.5 14 3v18L2 18.5z"/><path fill="#fff" d="m5.1 8 2.1 3.8L9.4 8h2l-3.1 5 3.1 5h-2l-2.2-3.8L5 18H3l3.1-5L3 8z"/></svg>خروجی اکسل</button>
+    <button class="btn btn-primary" onclick="openPortfolioModal()">+ ایجاد سبد جدید</button>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="nav-tab active" data-page="dashboard">داشبورد</button>
+  <button class="nav-tab" data-page="portfolios">سبدهای سرمایه‌گذاری</button>
+  <button class="nav-tab" data-page="inflation">تورم ماهانه</button>
+</nav>
+
+<main id="dashboard" class="page active">
+  <div class="section-heading">
+    <div>
+      <h2>نمای کلی دارایی‌ها</h2>
+      <p>خلاصه وضعیت سبدهای سرمایه‌گذاری ثبت‌شده</p>
+    </div>
+    <button class="btn btn-soft" onclick="openPortfolioModal()">افزودن سبد</button>
+  </div>
+
+  <div class="grid stats-grid">
+    <div class="card stat-card">
+      <div class="stat-label">تعداد سبدهای فعال</div>
+      <div class="stat-value" id="statPortfolioCount">0</div>
+      <div class="stat-foot">سبد سرمایه‌گذاری ثبت‌شده</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-label">مجموع ارزش اولیه ثبت‌شده</div>
+      <div class="stat-value" id="statInitialValue">0</div>
+      <div class="stat-foot">تومان</div>
+    </div>
+    <div class="card stat-card khums-clickable" role="button" tabindex="0" onclick="openKhumsReport()" onkeydown="if(event.key==='Enter'||event.key===' ')openKhumsReport()">
+      <div class="stat-label">مجموع خمس قطعی قابل پرداخت</div>
+      <div class="stat-value" id="statKhums">—</div>
+      <div class="stat-foot">محاسبه قطعی نیازمند تکمیل اطلاعات است.</div>
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <div>
+      <h2>سبدهای سرمایه‌گذاری</h2>
+      <p>برای مشاهده جزئیات هر سبد، روی کارت آن کلیک کن.</p>
+    </div>
+  </div>
+  <div id="dashboardPortfolios" class="grid portfolio-grid"></div>
+
+  <div class="notice info">
+    تاریخ‌ها بر اساس دوره خمسی فعال تعیین می‌شوند. ارزش واقعی فقط در تاریخ‌هایی که اطلاعات آن‌ها ثبت شده نمایش داده می‌شود و برنامه برای روزهای فاقد داده، ارزش تخمینی تولید نمی‌کند.
+  </div>
+</main>
+
+<section id="khumsReport" class="page">
+  <div id="khumsReportCapture" style="background:var(--bg);padding:4px;border-radius:16px">
+  <div class="section-heading">
+    <div>
+      <h2>گزارش خمس سبدها</h2>
+      <p id="khumsReportPeriod">سال خمسی فعال</p>
+      <p>سبدها بر اساس مبلغ خمس نهایی، از بیشترین به کمترین مرتب شده‌اند.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-excel" style="background:#229ED9;border-color:#229ED9" onclick="downloadKhumsReportImage()"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>دانلود گزارش</button>
+      <button class="btn" onclick="showPage('dashboard')">بازگشت به داشبورد</button>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns:minmax(250px,.8fr) minmax(0,1.5fr);align-items:stretch">
+    <div class="card">
+      <h3 style="margin:0 0 14px;font-size:15px">سهم هر سبد از خمس قطعی</h3>
+      <div id="khumsDonut" class="khums-donut-wrap"></div>
+      <div id="khumsLegend" class="khums-legend"></div>
+    </div>
+    <div class="card">
+      <div class="stat-label">مجموع خمس سبدهای معتبر</div>
+      <div class="stat-value" id="khumsReportTotal">0</div>
+      <div class="stat-foot" id="khumsReportStatus"></div>
+      <div id="khumsReportCards" class="khums-report-list"></div>
+    </div>
+  </div>
+  <div id="khumsReportInvalid" class="notice" style="margin-top:16px"></div>
+  </div>
+</section>
+
+<section id="portfolios" class="page">
+  <div class="section-heading">
+    <div>
+      <h2>مدیریت سبدها</h2>
+      <p>ایجاد، مشاهده و مدیریت سبدهای مستقل سرمایه‌گذاری</p>
+    </div>
+    <button class="btn btn-primary" onclick="openPortfolioModal()">+ ایجاد سبد</button>
+  </div>
+  <div id="allPortfolios" class="grid portfolio-grid"></div>
+</section>
+
+<section id="inflation" class="page">
+  <div class="section-heading">
+    <div>
+      <h2>تورم ماهانه</h2>
+      <p>منبع مرکزی نرخ‌های تورم برای محاسبات سبدهای سرمایه‌گذاری</p>
+    </div>
+    <span class="status" id="inflationStatus">نرخ‌ها اعمال نشده‌اند</span>
+  </div>
+
+  <div class="card">
+    <div class="section-heading" style="margin-top:0">
+      <div>
+        <h3 style="margin:0;font-size:16px">تنظیم تاریخ سال خمسی</h3>
+        <p>تاریخ شروع را یک‌بار با روز، ماه و سال تعیین کن؛ پایان دوره به‌صورت خودکار یک سال بعد تنظیم می‌شود.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="khomsiStartMonth">۱. ماه شروع سال خمسی</label>
+        <select id="khomsiStartMonth" onchange="renderKhomsiStartDayOptions()"></select>
+      </div>
+      <div class="field">
+        <label for="khomsiStartDay">۲. روز شروع سال خمسی</label>
+        <select id="khomsiStartDay"></select>
+      </div>
+      <div class="field">
+        <label for="khomsiStartYear">۳. سال شروع خمسی</label>
+        <input id="khomsiStartYear" type="number" min="1300" max="1600" step="1" placeholder="۱۴۰۴" onchange="renderKhomsiStartDayOptions()">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveKhomsiStartDate()">ثبت تاریخ سال خمسی</button>
+      <span class="status" id="khomsiPeriodPreview"></span>
+    </div>
+    <hr class="divider">
+    <div class="notice info">
+      نرخ تورم هر ماه را به درصد وارد کن. پس از تکمیل نرخ‌ها، دکمه «اعمال نرخ‌های تورم» را بزن.
+    </div>
+    <div class="inflation-grid" id="inflationGrid"></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="applyInflationBtn" onclick="applyInflation()">اعمال نرخ‌های تورم</button>
+      <button class="btn" onclick="resetInflationInputs()">بازنشانی ورودی‌ها</button>
+    </div>
+  </div>
+</section>
+
+<section id="portfolioDetail" class="page">
+  <div class="card">
+    <div class="detail-header">
+      <div>
+        <h2 id="detailTitle">جزئیات سبد</h2>
+        <p class="muted" id="detailSubtitle" style="font-size:12px;margin:6px 0 0"></p>
+      </div>
+      <div class="detail-actions">
+        <button class="btn btn-soft" onclick="openTransactionModal('deposit')">+ واریز</button>
+        <button class="btn btn-soft" onclick="openTransactionModal('withdrawal')">− برداشت</button>
+        <button class="btn" onclick="showPage('portfolios')">بازگشت</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid stats-grid" style="margin-top:16px">
+    <div class="card">
+      <div class="stat-label">ارزش اولیه ثبت‌شده</div>
+      <div class="stat-value" id="detailInitial">0</div>
+      <div class="stat-foot">تومان</div>
+    </div>
+    <div class="card">
+      <div class="stat-label">جمع واریزها</div>
+      <div class="stat-value" id="detailDeposits">0</div>
+      <div class="stat-foot">تومان</div>
+    </div>
+    <div class="card">
+      <div class="stat-label">جمع برداشت‌ها</div>
+      <div class="stat-value" id="detailWithdrawals">0</div>
+      <div class="stat-foot">تومان</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="section-heading" style="margin-top:0">
+      <div>
+        <h2>تاریخچه تراکنش‌ها</h2>
+        <p>هر تراکنش به‌صورت مستقل نگهداری می‌شود.</p>
+      </div>
+    </div>
+    <div id="transactionTable"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3 style="margin-top:0;font-size:16px">ارزش واقعی در تاریخ ارزیابی</h3>
+    <div class="notice info">
+      تاریخ ارزیابی نهایی برابر با تاریخ پایان سال خمسی فعال است و به‌صورت خودکار تنظیم می‌شود.
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>ارزش واقعی سبد در تاریخ ارزیابی (تومان)</label>
+        <input id="finalActualValue" class="number-input" inputmode="decimal" placeholder="150,000,000">
+      </div>
+      <div class="field">
+        <label>تاریخ ثبت ارزش واقعی</label>
+        <input id="finalActualDate" class="date-input" readonly placeholder="انتخاب تاریخ" onclick="openJalaliPicker('finalActualDate')">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveFinalValuation()">ثبت ارزش واقعی</button>
+    </div>
+    <div class="notice" id="calculationNotice">
+      برای محاسبه قطعی، اطلاعات تکمیلی موردنیاز است.
+    </div>
+  </div>
+</section>
+
+<footer>خمسیلیزیشن | Khomsilization · پیش به سوی خمس‌های میلیاردی 🚀🔥 · اطلاعات در حافظه همین مرورگر ذخیره می‌شوند.</footer>
+</div>
+
+<!-- PORTFOLIO MODAL -->
+<div class="modal-backdrop" id="portfolioModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="portfolioModalTitle">ایجاد سبد سرمایه‌گذاری</h3>
+      <button class="close-btn" onclick="closeModal('portfolioModal')">×</button>
+    </div>
+    <form id="portfolioForm">
+      <input type="hidden" id="portfolioEditId">
+      <div class="form-grid">
+        <div class="field">
+          <label>نام سبد *</label>
+          <input id="portfolioName" required placeholder="مثلاً طلا، بورس، ارز دیجیتال">
+        </div>
+        <div class="field">
+          <label>ارزش اولیه واقعی سبد (تومان) *</label>
+          <input id="portfolioInitial" class="number-input" inputmode="decimal" required placeholder="100,000,000">
+        </div>
+        <div class="field">
+          <label>تاریخ ثبت ارزش اولیه *</label>
+          <input id="portfolioStartDate" class="date-input" readonly required placeholder="انتخاب تاریخ" onclick="openJalaliPicker('portfolioStartDate')">
+        </div>
+        <div class="field">
+          <label>وضعیت خمس اصل سرمایه اولیه *</label>
+          <select id="portfolioTaxStatus" required>
+            <option value="">انتخاب کن</option>
+            <option value="taxable">مشمول خمس</option>
+            <option value="exempt">غیرمشمول خمس / خمس پرداخت‌شده</option>
+            <option value="unknown">نامشخص</option>
+          </select>
+        </div>
+      </div>
+      <div class="notice info">
+        ارزش اولیه به‌عنوان داده مرجع در تاریخ انتخاب‌شده ذخیره می‌شود.
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">ذخیره سبد</button>
+        <button class="btn" type="button" onclick="closeModal('portfolioModal')">انصراف</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TRANSACTION MODAL -->
+<div class="modal-backdrop" id="transactionModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="transactionModalTitle">ثبت تراکنش</h3>
+      <button class="close-btn" onclick="closeModal('transactionModal')">×</button>
+    </div>
+    <form id="transactionForm">
+      <input type="hidden" id="transactionEditId">
+      <input type="hidden" id="transactionType">
+      <div class="form-grid">
+        <div class="field">
+          <label>تاریخ تراکنش *</label>
+          <input id="transactionDate" class="date-input" readonly required placeholder="انتخاب تاریخ" onclick="openJalaliPicker('transactionDate')">
+        </div>
+        <div class="field">
+          <label>مبلغ (تومان) *</label>
+          <input id="transactionAmount" class="number-input" inputmode="decimal" required placeholder="10,000,000">
+        </div>
+        <div class="field" id="depositTaxField">
+          <label>وضعیت خمس اصل مبلغ واریزی *</label>
+          <select id="transactionTaxStatus">
+            <option value="">انتخاب کن</option>
+            <option value="taxable">مشمول خمس</option>
+            <option value="exempt">غیرمشمول خمس / خمس پرداخت‌شده</option>
+            <option value="unknown">نامشخص</option>
+          </select>
+        </div>
+        <div class="field hidden" id="withdrawalValueField">
+          <label>ارزش کل واقعی سبد پیش از برداشت (تومان) *</label>
+          <input id="withdrawalPortfolioValue" class="number-input" inputmode="decimal" placeholder="120,000,000">
+          <small>ارزش کل سبد در لحظه برداشت، پیش از کسر مبلغ برداشت</small>
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label>توضیحات</label>
+          <input id="transactionDescription" placeholder="توضیحات اختیاری">
+        </div>
+      </div>
+      <div class="notice info" id="transactionHint"></div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">ذخیره تراکنش</button>
+        <button class="btn" type="button" onclick="closeModal('transactionModal')">انصراف</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JALALI DATE PICKER -->
+<div class="modal-backdrop" id="datePickerModal">
+  <div class="modal date-picker-box">
+    <div class="modal-head">
+      <h3>انتخاب تاریخ شمسی</h3>
+      <button class="close-btn" onclick="closeModal('datePickerModal')">×</button>
+    </div>
+
+    <div class="notice info" id="datePickerPeriod">دوره خمسی فعال</div>
+
+    <div class="field">
+      <label>مرحله اول: انتخاب ماه شمسی</label>
+      <select id="datePickerMonth">
+        <option value="">ابتدا ماه را انتخاب کن</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>مرحله دوم: انتخاب روز</label>
+      <select id="datePickerDay" disabled>
+        <option value="">ابتدا ماه را انتخاب کن</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" id="confirmDatePicker" onclick="confirmJalaliDate()" disabled>تأیید تاریخ</button>
+      <button class="btn" onclick="closeModal('datePickerModal')">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   1. CONSTANTS AND STATE
+   ========================================================= */
+
+const STORAGE_KEY = "khomsilization_app_v2";
+
+const MONTHS = [
+  "فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور",
+  "مهر","آبان","آذر","دی","بهمن","اسفند"
+];
+
+
+
+const SEASONS = [
+  {name:"بهار",months:[0,1,2]},
+  {name:"تابستان",months:[3,4,5]},
+  {name:"پاییز",months:[6,7,8]},
+  {name:"زمستان",months:[9,10,11]}
+];
+
+function detectKhomsiStartYear() {
+  const now = new Date();
+  const j = jalaali.toJalaali(now);
+  return j.jm >= 8 ? j.jy : j.jy - 1;
+}
+
+function detectKhomsiStartDate() {
+  return `${detectKhomsiStartYear()}/08/01`;
+}
+
+const DEFAULT_STATE = {
+  version:3,
+  theme:"light",
+  khomsiStartYear:detectKhomsiStartYear(),
+  khomsiStartDate:detectKhomsiStartDate(),
+  inflationDraft:Array(12).fill(""),
+  inflationActive:null,
+  portfolios:[],
+  activePortfolioId:null
+};
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(DEFAULT_STATE);
+    const parsed = JSON.parse(raw);
+    const merged = {...structuredClone(DEFAULT_STATE),...parsed};
+    if(!parsed.khomsiStartDate) {
+      const legacyYear=Number(parsed.khomsiStartYear)||detectKhomsiStartYear();
+      merged.khomsiStartDate=`${legacyYear}/08/01`;
+    }
+    return merged;
+  } catch(error) {
+    console.error("Storage read error:",error);
+    return structuredClone(DEFAULT_STATE);
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  } catch(error) {
+    toast("ذخیره اطلاعات انجام نشد. فضای ذخیره‌سازی مرورگر را بررسی کن.");
+    console.error(error);
+  }
+}
+
+/* =========================================================
+   2. GENERAL HELPERS
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+function uid() {
+  return "id_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,9);
+}
+
+function numberValue(value) {
+  if (typeof value==="number") return value;
+  const normalized = String(value??"")
+    .replace(/,/g,"")
+    .replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .trim();
+  if (!normalized) return NaN;
+  return Number(normalized);
+}
+
+function formatNumber(value) {
+  if (!Number.isFinite(Number(value))) return "—";
+  return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(Number(value));
+}
+
+function formatMoney(value) {
+  return formatNumber(value);
+}
+
+function escapeHTML(value) {
+  return String(value??"").replace(/[&<>"']/g,char=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[char]);
+}
+
+function toast(message) {
+  const el=document.createElement("div");
+  el.className="toast";
+  el.textContent=message;
+  $("toastContainer").appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+function openModal(id) { $(id).classList.add("show"); }
+function closeModal(id) { $(id).classList.remove("show"); }
+
+function getPortfolio(id) {
+  return state.portfolios.find(p=>p.id===id);
+}
+
+/* =========================================================
+   3. PAGE NAVIGATION
+   ========================================================= */
+
+function showPage(pageId) {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const target=$(pageId);
+  if(target) target.classList.add("active");
+
+  document.querySelectorAll(".nav-tab").forEach(tab=>{
+    tab.classList.toggle("active",tab.dataset.page===pageId);
+  });
+
+  if(pageId==="dashboard") renderDashboard();
+  if(pageId==="portfolios") renderPortfolios();
+  if(pageId==="inflation") renderInflation();
+  if(pageId==="khumsReport") renderKhumsReport();
+}
+
+document.querySelectorAll(".nav-tab").forEach(tab=>{
+  tab.addEventListener("click",()=>showPage(tab.dataset.page));
+});
+
+/* =========================================================
+   4. THEME
+   ========================================================= */
+
+function setTheme(theme) {
+  if(!["light","dark","sepia"].includes(theme)) theme="light";
+  state.theme=theme;
+  document.documentElement.dataset.theme=theme;
+  $("themeSelect").value=theme;
+  saveState();
+}
+
+$("themeSelect").addEventListener("change",event=>setTheme(event.target.value));
+
+/* =========================================================
+   5. JALALI DATE ENGINE
+   ========================================================= */
+
+function parseJalaliDate(value) {
+  const match=String(value||"").trim().match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+  if(!match) return null;
+
+  const jy=Number(match[1]);
+  const jm=Number(match[2]);
+  const jd=Number(match[3]);
+
+  if(!window.jalaali || !jalaali.isValidJalaaliDate(jy,jm,jd)) return null;
+
+  const g=jalaali.toGregorian(jy,jm,jd);
+  const timestamp=Date.UTC(g.gy,g.gm-1,g.gd);
+
+  return {
+    jy,jm,jd,
+    normalized:`${jy}/${String(jm).padStart(2,"0")}/${String(jd).padStart(2,"0")}`,
+    timestamp
+  };
+}
+
+function compareDates(a,b) {
+  const da=parseJalaliDate(a);
+  const db=parseJalaliDate(b);
+  if(!da||!db) return null;
+  return Math.sign(da.timestamp-db.timestamp);
+}
+
+function currentJalaliDate() {
+  const now=new Date();
+  const j=jalaali.toJalaali(now);
+  return `${j.jy}/${String(j.jm).padStart(2,"0")}/${String(j.jd).padStart(2,"0")}`;
+}
+
+function getKhomsiStartDate() {
+  const configured=parseJalaliDate(state.khomsiStartDate);
+  if(configured) return configured.normalized;
+  return `${Number(state.khomsiStartYear)||detectKhomsiStartYear()}/08/01`;
+}
+
+function getActiveKhomsiStartYear() {
+  return parseJalaliDate(getKhomsiStartDate()).jy;
+}
+
+function getYearForKhomsiMonth(month) {
+  const start=parseJalaliDate(getKhomsiStartDate());
+  return month>=start.jm ? start.jy : start.jy+1;
+}
+
+function getJalaliDays(year,month) {
+  return jalaali.jalaaliMonthLength(year,month);
+}
+
+function getKhomsiEndDate() {
+  const start=parseJalaliDate(getKhomsiStartDate());
+  const year=start.jy+1;
+  const day=Math.min(start.jd,getJalaliDays(year,start.jm));
+  return `${year}/${String(start.jm).padStart(2,"0")}/${String(day).padStart(2,"0")}`;
+}
+
+function getKhomsiMonthEntries() {
+  const start=parseJalaliDate(getKhomsiStartDate());
+  const end=parseJalaliDate(getKhomsiEndDate());
+  const entries=[];
+  let year=start.jy,month=start.jm;
+  while(year<end.jy||(year===end.jy&&month<=end.jm)) {
+    const firstDay=(year===start.jy&&month===start.jm)?start.jd:1;
+    const lastDay=(year===end.jy&&month===end.jm)?end.jd-1:getJalaliDays(year,month);
+    if(firstDay<=lastDay) entries.push({year,number:month,name:MONTHS[month-1],firstDay,lastDay});
+    month++;
+    if(month>12){month=1;year++;}
+  }
+  return entries;
+}
+
+function isDateInsideKhomsiPeriod(dateString) {
+  const start=parseJalaliDate(getKhomsiStartDate());
+  const end=parseJalaliDate(getKhomsiEndDate());
+  const date=parseJalaliDate(dateString);
+  return !!(start&&end&&date&&date.timestamp>=start.timestamp&&date.timestamp<end.timestamp);
+}
+
+/* =========================================================
+   6. JALALI DATE PICKER
+   Month first -> Day second -> Automatic year
+   ========================================================= */
+
+let datePickerTarget=null;
+let selectedPickerMonth=null;
+let selectedPickerDay=null;
+let selectedPickerYear=null;
+
+function openJalaliPicker(inputId) {
+  if(!window.jalaali) {
+    toast("کتابخانه تقویم شمسی بارگذاری نشده است. اتصال اینترنت را بررسی کن.");
+    return;
+  }
+
+  datePickerTarget=inputId;
+  selectedPickerMonth=null;
+  selectedPickerDay=null;
+  selectedPickerYear=null;
+
+  const monthSelect=$("datePickerMonth");
+  const daySelect=$("datePickerDay");
+  const confirmButton=$("confirmDatePicker");
+  monthSelect.innerHTML='<option value="">انتخاب ماه</option>';
+  daySelect.innerHTML='<option value="">ابتدا ماه را انتخاب کن</option>';
+  daySelect.disabled=true;
+  confirmButton.disabled=true;
+  monthSelect.disabled=false;
+
+  const start=parseJalaliDate(getKhomsiStartDate());
+  const end=parseJalaliDate(getKhomsiEndDate());
+  $("datePickerPeriod").textContent=`دوره خمسی فعال: ${getKhomsiStartDate()} تا ${getKhomsiEndDate()}`;
+
+  if(inputId==="finalActualDate") {
+    selectedPickerYear=end.jy;
+    selectedPickerMonth=end.jm;
+    selectedPickerDay=end.jd;
+    monthSelect.innerHTML=`<option value="${end.jy}-${end.jm}">${MONTHS[end.jm-1]} (پایان سال خمسی)</option>`;
+    monthSelect.value=`${end.jy}-${end.jm}`;
+    monthSelect.disabled=true;
+    renderPickerDays({year:end.jy,month:end.jm,firstDay:end.jd,lastDay:end.jd});
+  } else {
+    const entries=getKhomsiMonthEntries();
+    entries.forEach((entry,index)=>{
+      const option=document.createElement("option");
+      option.value=`${entry.year}-${entry.number}`;
+      const isFirst=index===0,isLast=index===entries.length-1;
+      option.textContent=`${entry.name}${isFirst?" (ابتدای دوره)":isLast?" (انتهای دوره)":""}`;
+      option.dataset.year=entry.year;
+      option.dataset.month=entry.number;
+      option.dataset.first=entry.firstDay;
+      option.dataset.last=entry.lastDay;
+      monthSelect.appendChild(option);
+    });
+    monthSelect.onchange=function() {
+      const option=this.options[this.selectedIndex];
+      if(!option||!option.dataset.year) {
+        selectedPickerMonth=selectedPickerDay=selectedPickerYear=null;
+        daySelect.disabled=true;
+        confirmButton.disabled=true;
+        daySelect.innerHTML='<option value="">ابتدا ماه را انتخاب کن</option>';
+        return;
+      }
+      selectedPickerYear=Number(option.dataset.year);
+      selectedPickerMonth=Number(option.dataset.month);
+      selectedPickerDay=null;
+      renderPickerDays({year:selectedPickerYear,month:selectedPickerMonth,firstDay:Number(option.dataset.first),lastDay:Number(option.dataset.last)});
+    };
+  }
+  openModal("datePickerModal");
+}
+
+function renderPickerDays(entry) {
+  const daySelect=$("datePickerDay");
+  const confirmButton=$("confirmDatePicker");
+  daySelect.innerHTML='<option value="">انتخاب روز</option>';
+  for(let day=entry.firstDay;day<=entry.lastDay;day++) {
+    const option=document.createElement("option");
+    option.value=day;
+    option.textContent=day;
+    daySelect.appendChild(option);
+  }
+  daySelect.disabled=false;
+  confirmButton.disabled=true;
+  if(datePickerTarget==="finalActualDate") {
+    selectedPickerDay=entry.firstDay;
+    daySelect.value=String(entry.firstDay);
+    confirmButton.disabled=false;
+  }
+  daySelect.onchange=function() {
+    selectedPickerDay=Number(this.value)||null;
+    confirmButton.disabled=!selectedPickerDay;
+  };
+}
+
+function confirmJalaliDate() {
+  if(!datePickerTarget||!selectedPickerMonth||!selectedPickerDay||!selectedPickerYear) {
+    return toast("ماه و روز را انتخاب کن.");
+  }
+  const date=`${selectedPickerYear}/${String(selectedPickerMonth).padStart(2,"0")}/${String(selectedPickerDay).padStart(2,"0")}`;
+  const parsed=parseJalaliDate(date);
+  if(!parsed) return toast("تاریخ انتخاب‌شده معتبر نیست.");
+  if(datePickerTarget!=="finalActualDate"&&!isDateInsideKhomsiPeriod(date)) {
+    return toast("تاریخ باید در محدوده سال خمسی فعال باشد.");
+  }
+  if(datePickerTarget==="finalActualDate"&&parsed.normalized!==getKhomsiEndDate()) {
+    return toast(`تاریخ ارزیابی نهایی باید ${getKhomsiEndDate()} باشد.`);
+  }
+  $(datePickerTarget).value=parsed.normalized;
+  closeModal("datePickerModal");
+  toast(`تاریخ ${parsed.normalized} انتخاب شد.`);
+}
+
+/* =========================================================
+   7. NUMBER INPUT FORMATTING
+   ========================================================= */
+
+function attachNumberFormatting(root=document) {
+  root.querySelectorAll(".number-input").forEach(input=>{
+    if(input.dataset.formatAttached) return;
+    input.dataset.formatAttached="1";
+
+    input.addEventListener("input",()=>{
+      const raw=input.value.replace(/[^\d.]/g,"");
+      const pieces=raw.split(".");
+      const integerPart=pieces.shift()||"";
+      const decimalPart=pieces.join("").slice(0,4);
+      const formatted=integerPart?Number(integerPart).toLocaleString("en-US"):"";
+      input.value=formatted+(raw.includes(".")?"."+decimalPart:"");
+    });
+  });
+}
+
+/* =========================================================
+   8. INFLATION PANEL
+   ========================================================= */
+
+function renderKhomsiStartDayOptions() {
+  const month=Number($("khomsiStartMonth").value);
+  const year=Number($("khomsiStartYear").value);
+  const daySelect=$("khomsiStartDay");
+  const previous=Number(daySelect.value)||parseJalaliDate(getKhomsiStartDate()).jd;
+  daySelect.innerHTML="";
+  if(!month||!year||year<1300||year>1600) return;
+  const max=getJalaliDays(year,month);
+  for(let day=1;day<=max;day++) {
+    const option=document.createElement("option");
+    option.value=day;option.textContent=day;daySelect.appendChild(option);
+  }
+  daySelect.value=String(Math.min(previous,max));
+}
+
+function renderKhomsiStartSettings() {
+  const start=parseJalaliDate(getKhomsiStartDate());
+  $("khomsiStartMonth").innerHTML=MONTHS.map((name,index)=>`<option value="${index+1}">${name}</option>`).join("");
+  $("khomsiStartMonth").value=String(start.jm);
+  $("khomsiStartYear").value=String(start.jy);
+  renderKhomsiStartDayOptions();
+  $("khomsiStartDay").value=String(start.jd);
+  $("khomsiPeriodPreview").textContent=`${getKhomsiStartDate()} تا ${getKhomsiEndDate()}`;
+}
+
+function shiftDateByOffset(dateString,oldStartTimestamp,newStartTimestamp,newEndTimestamp) {
+  const date=parseJalaliDate(dateString);
+  if(!date) return dateString;
+  let shifted=newStartTimestamp+(date.timestamp-oldStartTimestamp);
+  const lastAllowed=newEndTimestamp-86400000;
+  shifted=Math.max(newStartTimestamp,Math.min(shifted,lastAllowed));
+  const g=new Date(shifted);
+  const j=jalaali.toJalaali(g.getUTCFullYear(),g.getUTCMonth()+1,g.getUTCDate());
+  return `${j.jy}/${String(j.jm).padStart(2,"0")}/${String(j.jd).padStart(2,"0")}`;
+}
+
+function saveKhomsiStartDate() {
+  const month=Number($("khomsiStartMonth").value);
+  const day=Number($("khomsiStartDay").value);
+  const year=Number($("khomsiStartYear").value);
+  if(!Number.isInteger(year)||year<1300||year>1600||!jalaali.isValidJalaaliDate(year,month,day)) {
+    return toast("تاریخ شروع سال خمسی معتبر نیست.");
+  }
+  const newStart=`${year}/${String(month).padStart(2,"0")}/${String(day).padStart(2,"0")}`;
+  const oldStart=parseJalaliDate(getKhomsiStartDate());
+  if(newStart===oldStart.normalized) return toast("این تاریخ هم‌اکنون فعال است.");
+  if(!confirm(`با تغییر سال خمسی به ${newStart}، تاریخ تمام تراکنش‌ها و تاریخ شروع سبدها به همان میزان جابه‌جا می‌شود و ارزش‌گذاری نهایی به انتهای دوره جدید منتقل می‌شود. ادامه می‌دهی؟`)) return;
+  const oldEnd=parseJalaliDate(getKhomsiEndDate());
+  const newEndString=(function(){const d=Math.min(day,getJalaliDays(year+1,month));return `${year+1}/${String(month).padStart(2,"0")}/${String(d).padStart(2,"0")}`;})();
+  const newEnd=parseJalaliDate(newEndString);
+  state.portfolios.forEach(portfolio=>{
+    portfolio.startDate=shiftDateByOffset(portfolio.startDate,oldStart.timestamp,parseJalaliDate(newStart).timestamp,newEnd.timestamp);
+    (portfolio.transactions||[]).forEach(tx=>{tx.date=shiftDateByOffset(tx.date,oldStart.timestamp,parseJalaliDate(newStart).timestamp,newEnd.timestamp);});
+    if(portfolio.finalValuation) portfolio.finalValuation.date=newEndString;
+  });
+  state.khomsiStartDate=newStart;
+  state.khomsiStartYear=year;
+  saveState();
+  renderInflation();
+  renderDashboard();
+  renderPortfolios();
+  if($("khumsReport").classList.contains("active")) renderKhumsReport();
+  toast(`سال خمسی جدید از ${newStart} تا ${newEndString} اعمال شد.`);
+}
+
+function renderInflation() {
+  renderKhomsiStartSettings();
+  const container=$("inflationGrid");
+  container.innerHTML="";
+
+  SEASONS.forEach(season=>{
+    const heading=document.createElement("div");
+    heading.className="season-title";
+    heading.textContent=season.name;
+    container.appendChild(heading);
+
+    season.months.forEach(index=>{
+      const wrapper=document.createElement("div");
+      wrapper.className="month-field";
+      wrapper.innerHTML=`
+        <label for="inflation_${index}">${MONTHS[index]}</label>
+        <input id="inflation_${index}" type="number" min="-99.999" step="0.001"
+          placeholder="مثلاً 2.5" value="${escapeHTML(state.inflationDraft[index]??"")}">
+        <small>درصد ماهانه (%)</small>
+      `;
+      container.appendChild(wrapper);
+
+      wrapper.querySelector("input").addEventListener("input",event=>{
+        state.inflationDraft[index]=event.target.value;
+        saveState();
+      });
+    });
+  });
+
+  const status=$("inflationStatus");
+  if(state.inflationActive) {
+    status.textContent="نرخ‌های تورم فعال هستند";
+    status.className="status ok";
+  } else {
+    status.textContent="نرخ‌ها اعمال نشده‌اند";
+    status.className="status";
+  }
+}
+
+function applyInflation() {
+  const values=state.inflationDraft.map(v=>v===""?NaN:Number(v));
+
+  if(values.some(v=>!Number.isFinite(v)||v<=-100)) {
+    return toast("لطفاً نرخ معتبر برای هر ۱۲ ماه وارد کن.");
+  }
+
+  const btn=$("applyInflationBtn");
+  btn.disabled=true;
+  btn.textContent="در حال اعمال...";
+
+  setTimeout(()=>{
+    state.inflationActive=values;
+    saveState();
+    renderInflation();
+    btn.disabled=false;
+    btn.textContent="اعمال نرخ‌های تورم";
+    toast("نرخ‌های تورم با موفقیت اعمال شدند.");
+  },300);
+}
+
+function resetInflationInputs() {
+  if(!confirm("ورودی‌های نرخ تورم پاک شوند؟")) return;
+  state.inflationDraft=Array(12).fill("");
+  saveState();
+  renderInflation();
+  toast("ورودی‌های تورم بازنشانی شدند.");
+}
+
+/* =========================================================
+   9. PORTFOLIO MANAGEMENT
+   ========================================================= */
+
+function openPortfolioModal(id=null) {
+  $("portfolioForm").reset();
+  $("portfolioEditId").value="";
+
+  if(id) {
+    const p=getPortfolio(id);
+    if(!p) return;
+
+    $("portfolioModalTitle").textContent="ویرایش سبد";
+    $("portfolioEditId").value=p.id;
+    $("portfolioName").value=p.name;
+    $("portfolioInitial").value=formatNumber(p.initialValue);
+    $("portfolioStartDate").value=p.startDate;
+    $("portfolioTaxStatus").value=p.initialTaxStatus;
+  } else {
+    $("portfolioModalTitle").textContent="ایجاد سبد سرمایه‌گذاری";
+    $("portfolioStartDate").value="";
+  }
+
+  attachNumberFormatting($("portfolioModal"));
+  openModal("portfolioModal");
+}
+
+$("portfolioForm").addEventListener("submit",event=>{
+  event.preventDefault();
+
+  const id=$("portfolioEditId").value;
+  const name=$("portfolioName").value.trim();
+  const initialValue=numberValue($("portfolioInitial").value);
+  const startDate=parseJalaliDate($("portfolioStartDate").value);
+  const taxStatus=$("portfolioTaxStatus").value;
+
+  if(!name) return toast("نام سبد را وارد کن.");
+  if(!Number.isFinite(initialValue)||initialValue<0) return toast("ارزش اولیه باید عدد معتبر و غیرمنفی باشد.");
+  if(!startDate) return toast("تاریخ شروع را از تقویم انتخاب کن.");
+  if(!isDateInsideKhomsiPeriod(startDate.normalized)) return toast("تاریخ شروع باید در دوره خمسی فعال باشد.");
+  if(!taxStatus) return toast("وضعیت خمس اصل سرمایه را مشخص کن.");
+
+  if(id) {
+    const p=getPortfolio(id);
+    if(!p) return;
+
+    p.name=name;
+    p.initialValue=initialValue;
+    p.startDate=startDate.normalized;
+    p.initialTaxStatus=taxStatus;
+    p.updatedAt=new Date().toISOString();
+
+    toast("اطلاعات سبد ویرایش شد.");
+  } else {
+    const portfolio={
+      id:uid(),
+      name,
+      initialValue,
+      startDate:startDate.normalized,
+      initialTaxStatus:taxStatus,
+      transactions:[],
+      finalValuation:null,
+      createdAt:new Date().toISOString()
+    };
+
+    state.portfolios.push(portfolio);
+    state.activePortfolioId=portfolio.id;
+    toast("سبد جدید با موفقیت ایجاد شد.");
+  }
+
+  saveState();
+  closeModal("portfolioModal");
+  renderDashboard();
+  renderPortfolios();
+  if($("khumsReport").classList.contains("active")) renderKhumsReport();
+
+  if(id&&state.activePortfolioId===id) renderPortfolioDetail(id);
+});
+
+function deletePortfolio(id) {
+  const p=getPortfolio(id);
+  if(!p) return;
+
+  if(!confirm(`سبد «${p.name}» و تمام تراکنش‌های آن حذف شود؟`)) return;
+
+  state.portfolios=state.portfolios.filter(item=>item.id!==id);
+  if(state.activePortfolioId===id) state.activePortfolioId=null;
+
+  saveState();
+  renderDashboard();
+  renderPortfolios();
+  showPage("portfolios");
+  toast("سبد حذف شد.");
+}
+
+function portfolioCardHTML(p) {
+  const deposits=(p.transactions||[]).filter(t=>t.type==="deposit").reduce((s,t)=>s+Number(t.amount),0);
+  const withdrawals=(p.transactions||[]).filter(t=>t.type==="withdrawal").reduce((s,t)=>s+Number(t.amount),0);
+  const financial=calculatePortfolioFinancials(p);
+  const khumsText=financial.valid?`${formatMoney(financial.totalKhums)} تومان`:"نیازمند تکمیل اطلاعات";
+
+  return `
+    <article class="card portfolio-card" onclick="renderPortfolioDetail('${p.id}')">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div>
+          <h3>${escapeHTML(p.name)}</h3>
+          <div class="sub">شروع: ${escapeHTML(p.startDate)}</div>
+        </div>
+        <span class="status ${financial.valid?'ok':''}">${financial.valid?'محاسبه معتبر':'در انتظار ارزیابی'}</span>
+      </div>
+      <div class="amount">${formatMoney(p.initialValue)}</div>
+      <div class="sub">ارزش اولیه ثبت‌شده · تومان</div>
+      <div class="portfolio-khums"><span>خمس نهایی تا این لحظه</span><strong>${khumsText}</strong></div>
+      <hr class="divider">
+      <div style="display:flex;justify-content:space-between;font-size:11px;gap:8px">
+        <span class="muted">واریزها: ${formatMoney(deposits)}</span>
+        <span class="muted">برداشت‌ها: ${formatMoney(withdrawals)}</span>
+      </div>
+    </article>
+  `;
+}
+
+function getAllPortfolioFinancials() {
+  return (state.portfolios || []).map(portfolio => ({
+    portfolio,
+    financial: calculatePortfolioFinancials(portfolio)
+  }));
+}
+
+function getKhumsAggregate() {
+  const results = getAllPortfolioFinancials();
+  const validResults = results.filter(item => item.financial.valid);
+  const invalidCount = results.length - validResults.length;
+  const total = validResults.reduce((sum, item) =>
+    sum + (Number(item.financial.totalKhums) || 0), 0);
+
+  return {
+    total,
+    portfolioCount: results.length,
+    validCount: validResults.length,
+    invalidCount,
+    allValid: results.length > 0 && invalidCount === 0,
+    hasValid: validResults.length > 0
+  };
+}
+
+function openKhumsReport() {
+  showPage("khumsReport");
+}
+
+function renderKhumsReport() {
+  $("khumsReportPeriod").textContent=`سال خمسی: ${getKhomsiStartDate()} الی ${getKhomsiEndDate()}`;
+  const items=getAllPortfolioFinancials();
+  const valid=items.filter(item=>item.financial.valid).sort((a,b)=>b.financial.totalKhums-a.financial.totalKhums);
+  const invalid=items.filter(item=>!item.financial.valid);
+  const total=valid.reduce((sum,item)=>sum+(Number(item.financial.totalKhums)||0),0);
+  $("khumsReportTotal").textContent=formatMoney(total);
+  $("khumsReportStatus").textContent=invalid.length
+    ? `${valid.length} سبد معتبر · ${invalid.length} سبد نیازمند بررسی؛ جمع بالا فقط شامل سبدهای معتبر است.`
+    : `${valid.length} سبد معتبر در محاسبه جمع کل لحاظ شده است.`;
+
+  const colors=["#229ED9","#15966b","#d64f63","#bd7c27","#3286b8","#69b6dc","#4b9d91","#d18b52","#60758d","#aa6478"];
+  let cursor=0;
+  const stops=valid.map((item,index)=>{
+    const pct=total>0?(item.financial.totalKhums/total)*100:0;
+    const start=cursor;
+    cursor+=pct;
+    return `${colors[index%colors.length]} ${start}% ${cursor}%`;
+  });
+  $("khumsDonut").innerHTML=valid.length&&total>0
+    ? `<div class="khums-donut" style="background:conic-gradient(${stops.join(',')})"><div class="khums-donut-center"><strong>${formatMoney(total)}</strong>تومان خمس</div></div>`
+    : `<div class="empty">هنوز خمس قطعی معتبری برای نمایش نمودار وجود ندارد.</div>`;
+  $("khumsLegend").innerHTML=valid.map((item,index)=>{
+    const pct=total>0?(item.financial.totalKhums/total*100):0;
+    return `<div class="khums-legend-item"><span class="khums-legend-label"><i class="khums-legend-dot" style="background:${colors[index%colors.length]}"></i>${escapeHTML(item.portfolio.name)}</span><span class="khums-legend-value">${pct.toFixed(1)}% · ${formatMoney(item.financial.totalKhums)}</span></div>`;
+  }).join("");
+
+  $("khumsReportCards").innerHTML=items.length?items.sort((a,b)=>(b.financial.totalKhums||0)-(a.financial.totalKhums||0)).map(({portfolio,financial})=>`
+    <div class="khums-report-card" role="button" tabindex="0" onclick="renderPortfolioDetail('${portfolio.id}')">
+      <div><div class="report-name">${escapeHTML(portfolio.name)}</div><div class="muted" style="font-size:10px;margin-top:4px">${financial.valid?'خمس قطعی قابل پرداخت':'نیازمند تکمیل اطلاعات'}</div></div>
+      <div class="report-value">${financial.valid?formatMoney(financial.totalKhums):'—'}</div>
+      <div class="khums-report-actions">
+        <button class="btn btn-small btn-soft" onclick="event.stopPropagation();renderPortfolioDetail('${portfolio.id}')">جزئیات</button>
+        <button class="btn btn-small" onclick="event.stopPropagation();openPortfolioModal('${portfolio.id}')">ویرایش</button>
+        <button class="btn btn-small btn-danger" onclick="event.stopPropagation();deletePortfolio('${portfolio.id}')">حذف</button>
+      </div>
+    </div>`).join(""):`<div class="empty">سبدی ثبت نشده است.</div>`;
+
+  $("khumsReportInvalid").style.display=invalid.length?"block":"none";
+  $("khumsReportInvalid").textContent=invalid.length
+    ? `توجه: خمس ${invalid.length} سبد به علت نقص اطلاعات در جمع قطعی لحاظ نشده است. برای مشاهده علت، وارد جزئیات همان سبد شو.`
+    : "تمام سبدها دارای محاسبات معتبر هستند.";
+}
+
+async function downloadKhumsReportImage() {
+  const target=$("khumsReportCapture");
+  if(!window.html2canvas) return toast("کتابخانه ساخت تصویر بارگذاری نشده است. اتصال اینترنت را بررسی کن.");
+  try {
+    const canvas=await html2canvas(target,{scale:2,backgroundColor:getComputedStyle(document.body).backgroundColor,useCORS:true,logging:false,windowWidth:Math.max(document.documentElement.scrollWidth,target.scrollWidth)});
+    const link=document.createElement("a");
+    link.download=`Khomsilization_Khums_Report_${getKhomsiStartDate().replaceAll("/","-")}.png`;
+    link.href=canvas.toDataURL("image/png");
+    link.click();
+    toast("تصویر گزارش خمس با موفقیت آماده شد.");
+  } catch(error) {
+    console.error("Khums report image error:",error);
+    toast("ساخت تصویر گزارش انجام نشد. صفحه را دوباره بارگذاری و تلاش کن.");
+  }
+}
+
+function renderDashboard() {
+  $("statPortfolioCount").textContent=formatNumber(state.portfolios.length);
+
+  const initialTotal=state.portfolios.reduce((sum,p)=>sum+(Number(p.initialValue)||0),0);
+  $("statInitialValue").textContent=formatMoney(initialTotal);
+
+  const khums = getKhumsAggregate();
+  const khumsValue = $("statKhums");
+  const khumsFoot = khumsValue?.parentElement?.querySelector(".stat-foot");
+
+  if (!state.portfolios.length) {
+    khumsValue.textContent = "—";
+    if (khumsFoot) khumsFoot.textContent = "پس از ثبت سبد و تکمیل اطلاعات نمایش داده می‌شود.";
+  } else if (khums.hasValid) {
+    khumsValue.textContent = formatMoney(khums.total);
+    if (khumsFoot) {
+      khumsFoot.textContent = khums.allValid
+        ? `جمع خمس قطعی ${formatNumber(khums.validCount)} سبد معتبر · تومان`
+        : `جمع سبدهای معتبر؛ ${formatNumber(khums.invalidCount)} سبد دیگر نیازمند تکمیل اطلاعات است.`;
+    }
+  } else {
+    khumsValue.textContent = "نیازمند بررسی";
+    if (khumsFoot) khumsFoot.textContent = "برای محاسبه، اطلاعات دوره خمسی، تورم و ارزش واقعی نهایی را تکمیل کن.";
+  }
+
+  const container=$("dashboardPortfolios");
+
+  if(!state.portfolios.length) {
+    container.innerHTML=`
+      <div class="card empty" style="grid-column:1/-1">
+        <div class="emoji">📊</div>
+        هنوز هیچ سبدی ثبت نکرده‌ای.
+        <br><br>
+        <button class="btn btn-primary" onclick="openPortfolioModal()">ایجاد اولین سبد</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML=state.portfolios.map(portfolioCardHTML).join("");
+}
+
+function renderPortfolios() {
+  const container=$("allPortfolios");
+
+  if(!state.portfolios.length) {
+    container.innerHTML=`<div class="card empty" style="grid-column:1/-1">هنوز هیچ سبدی ایجاد نشده است.</div>`;
+    return;
+  }
+
+  container.innerHTML=state.portfolios.map(p=>`
+    <div>
+      ${portfolioCardHTML(p)}
+      <div style="display:flex;gap:7px;margin-top:8px">
+        <button class="btn btn-small btn-soft" onclick="renderPortfolioDetail('${p.id}')">جزئیات</button>
+        <button class="btn btn-small" onclick="openPortfolioModal('${p.id}')">ویرایش</button>
+        <button class="btn btn-small btn-danger" onclick="deletePortfolio('${p.id}')">حذف</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+
+/* =========================================================
+   10. FINANCIAL ENGINE
+   جایگزین کامل بخش 10، 11 و 12 کد قبلی
+   ========================================================= */
+
+/*
+  منطق:
+  1) سرمایه اولیه در تاریخ شروع سبد وارد محاسبه می‌شود و به اصل مشمول یا غیرمشمول تعلق می‌گیرد.
+  2) هر واریز به‌صورت یک محموله مستقل با وضعیت خمس خودش نگهداری می‌شود.
+  3) در صورت افت ارزش بازار، زیان ابتدا از محموله‌های جدیدتر و سپس از محموله‌های قدیمی‌تر کسر می‌شود.
+  4) برداشت ابتدا از سود واقعی لحظه برداشت، سپس از اصل مشمول و در نهایت از اصل غیرمشمول کسر می‌شود.
+  5) پس از هر برداشت، مبنای تورمی از اصل باقی‌مانده در همان تاریخ بازتنظیم می‌شود.
+  6) در ارزیابی نهایی نیز اصل باقی‌مانده از ارزش واقعی دارایی بیشتر نخواهد بود.
+*/
+
+function calculatePortfolioFinancials(p) {
+  const errors=[];
+  const warnings=[];
+  const result={
+    valid:false,status:"غیرقابل محاسبه قطعی",errors,warnings,dailyRows:[],allocations:{},
+    inflationFinal:null,actualFinal:null,difference:null,realProfit:null,
+    taxablePrincipal:null,exemptPrincipal:null,principalKhums:null,profitKhums:null,
+    totalKhums:null,depositsTotal:0,withdrawalsTotal:0,principalMarketLoss:0
+  };
+  if(!p){errors.push("سبد موردنظر پیدا نشد.");return result;}
+
+  const portfolioStart=parseJalaliDate(p.startDate);
+  const periodStart=parseJalaliDate(getKhomsiStartDate());
+  const periodEnd=parseJalaliDate(getKhomsiEndDate());
+  if(!portfolioStart||!periodStart||!periodEnd){errors.push("تاریخ شروع سبد یا دوره خمسی معتبر نیست.");return result;}
+  if(portfolioStart.timestamp<periodStart.timestamp||portfolioStart.timestamp>=periodEnd.timestamp)
+    errors.push("تاریخ شروع سبد باید داخل سال خمسی فعال باشد.");
+  if(!state.inflationActive||state.inflationActive.length!==12||state.inflationActive.some(v=>!Number.isFinite(Number(v))||Number(v)<=-100))
+    errors.push("نرخ تورم معتبر برای هر ۱۲ ماه ثبت نشده است.");
+  if(!Number.isFinite(Number(p.initialValue))||Number(p.initialValue)<0) errors.push("ارزش اولیه سبد معتبر نیست.");
+  if(!["taxable","exempt"].includes(p.initialTaxStatus)) errors.push("وضعیت خمس اصل سرمایه اولیه مشخص نیست.");
+  if(!p.finalValuation||!Number.isFinite(Number(p.finalValuation.value))||Number(p.finalValuation.value)<0)
+    errors.push("ارزش واقعی نهایی سبد ثبت نشده است.");
+  else if(p.finalValuation.date!==getKhomsiEndDate()) errors.push(`تاریخ ارزش واقعی نهایی با تاریخ پایان سال خمسی (${getKhomsiEndDate()}) مطابقت ندارد.`);
+
+  const transactions=[...(p.transactions||[])];
+  for(const t of transactions){
+    const d=parseJalaliDate(t.date);
+    if(!d){errors.push(`تاریخ تراکنش ${t.id} معتبر نیست.`);continue;}
+    if(d.timestamp<periodStart.timestamp||d.timestamp>=periodEnd.timestamp) errors.push(`تراکنش ${t.date} خارج از سال خمسی فعال است.`);
+    if(d.timestamp<portfolioStart.timestamp) errors.push(`تراکنش ${t.date} پیش از تاریخ شروع سبد ثبت شده است.`);
+    if(!Number.isFinite(Number(t.amount))||Number(t.amount)<=0) errors.push(`مبلغ تراکنش ${t.date} معتبر نیست.`);
+    if(t.type==="deposit"&&!['taxable','exempt'].includes(t.taxStatus)) errors.push(`وضعیت خمس واریز مورخ ${t.date} مشخص نیست.`);
+    if(t.type==="withdrawal"&&(!Number.isFinite(Number(t.portfolioValueBefore))||Number(t.portfolioValueBefore)<Number(t.amount)))
+      errors.push(`ارزش سبد پیش از برداشت مورخ ${t.date} معتبر نیست.`);
+    if(!['deposit','withdrawal'].includes(t.type)) errors.push(`نوع تراکنش مورخ ${t.date} معتبر نیست.`);
+  }
+  if(errors.length)return result;
+
+  // هر ورودی سرمایه به‌صورت یک محموله مستقل نگهداری می‌شود تا زیان بازار ابتدا از سرمایه‌های جدیدتر کسر شود.
+  const principalLots=[];
+  let taxablePrincipal=0,exemptPrincipal=0,inflationBalance=0,totalMarketLoss=0;
+  const refreshPrincipalTotals=()=>{
+    taxablePrincipal=principalLots.filter(lot=>lot.taxStatus==='taxable').reduce((sum,lot)=>sum+lot.amount,0);
+    exemptPrincipal=principalLots.filter(lot=>lot.taxStatus==='exempt').reduce((sum,lot)=>sum+lot.amount,0);
+  };
+  const applyMarketLoss=(loss)=>{
+    let remaining=Math.max(0,loss);
+    for(let i=principalLots.length-1;i>=0&&remaining>0.000001;i--){
+      const cut=Math.min(principalLots[i].amount,remaining);
+      principalLots[i].amount-=cut;
+      remaining-=cut;
+    }
+    refreshPrincipalTotals();
+    return Math.max(0,loss-remaining);
+  };
+  const reducePrincipalLots=(amount,taxStatus)=>{
+    let remaining=Math.max(0,amount);
+    for(let i=principalLots.length-1;i>=0&&remaining>0.000001;i--){
+      const lot=principalLots[i];
+      if(lot.taxStatus!==taxStatus) continue;
+      const cut=Math.min(lot.amount,remaining);
+      lot.amount-=cut;
+      remaining-=cut;
+    }
+    refreshPrincipalTotals();
+    return remaining;
+  };
+
+  result.depositsTotal=transactions.filter(t=>t.type==="deposit").reduce((s,t)=>s+Number(t.amount),0);
+  result.withdrawalsTotal=transactions.filter(t=>t.type==="withdrawal").reduce((s,t)=>s+Number(t.amount),0);
+  const eventsByDate=new Map();
+  transactions.forEach((t,index)=>{
+    const date=parseJalaliDate(t.date).normalized;
+    if(!eventsByDate.has(date))eventsByDate.set(date,[]);
+    eventsByDate.get(date).push({...t,_originalIndex:index});
+  });
+
+  for(let timestamp=periodStart.timestamp;timestamp<periodEnd.timestamp;timestamp+=86400000){
+    const g=new Date(timestamp);
+    const j=jalaali.toJalaali(g.getUTCFullYear(),g.getUTCMonth()+1,g.getUTCDate());
+    const date=`${j.jy}/${String(j.jm).padStart(2,'0')}/${String(j.jd).padStart(2,'0')}`;
+    const openingBalance=inflationBalance;
+    const dayEvents=eventsByDate.get(date)||[];
+    const deposits=dayEvents.filter(t=>t.type==='deposit');
+    const withdrawals=dayEvents.filter(t=>t.type==='withdrawal');
+    let initialInvestment=0,dailyDeposits=0,dailyWithdrawals=0,dailyProfitWithdrawal=0,dailyTaxableWithdrawal=0,dailyExemptWithdrawal=0;
+    let inflationReset=false,marketLossAdjustment=0;
+
+    if(date===portfolioStart.normalized){
+      initialInvestment=Number(p.initialValue);
+      inflationBalance+=initialInvestment;
+      principalLots.push({amount:initialInvestment,taxStatus:p.initialTaxStatus,source:'initial',date});
+      refreshPrincipalTotals();
+    }
+
+    for(const t of deposits){
+      const amount=Number(t.amount);
+      inflationBalance+=amount;dailyDeposits+=amount;
+      principalLots.push({amount,taxStatus:t.taxStatus,source:t.id,date});
+      refreshPrincipalTotals();
+    }
+
+    // پیش از برداشت، افت بازار به ترتیب از آخرین واریزها و سپس از سرمایه‌های قدیمی‌تر کسر می‌شود.
+    for(const t of withdrawals){
+      const amount=Number(t.amount);
+      const actualBefore=Number(t.portfolioValueBefore);
+      const nominalPrincipalBefore=taxablePrincipal+exemptPrincipal;
+      let lossBeforeWithdrawal=0;
+      if(nominalPrincipalBefore>actualBefore){
+        lossBeforeWithdrawal=applyMarketLoss(nominalPrincipalBefore-actualBefore);
+        totalMarketLoss+=lossBeforeWithdrawal;
+        marketLossAdjustment+=lossBeforeWithdrawal;
+      }
+      const adjustedPrincipalBefore=taxablePrincipal+exemptPrincipal;
+      const availableProfit=Math.max(0,actualBefore-adjustedPrincipalBefore);
+      const fromProfit=Math.min(amount,availableProfit);
+      let remaining=amount-fromProfit;
+      const fromTaxable=Math.min(remaining,taxablePrincipal);remaining-=fromTaxable;
+      const fromExempt=Math.min(remaining,exemptPrincipal);remaining-=fromExempt;
+      if(remaining>0.01){
+        errors.push(`برداشت ${formatMoney(amount)} تومان در تاریخ ${date} از ارزش واقعی و اصل سرمایه باقی‌مانده بیشتر است.`);
+        continue;
+      }
+      if(fromTaxable>0) reducePrincipalLots(fromTaxable,'taxable');
+      if(fromExempt>0) reducePrincipalLots(fromExempt,'exempt');
+      dailyWithdrawals+=amount;dailyProfitWithdrawal+=fromProfit;
+      dailyTaxableWithdrawal+=fromTaxable;dailyExemptWithdrawal+=fromExempt;
+      // پس از برداشت، مبنای تورمی فقط از اصل سرمایه باقی‌مانده در همان تاریخ ادامه می‌یابد.
+      inflationBalance=taxablePrincipal+exemptPrincipal;
+      inflationReset=true;
+      result.allocations[t.id]={
+        profit:fromProfit,taxable:fromTaxable,exempt:fromExempt,total:amount,
+        nominalPrincipalBefore,adjustedPrincipalBefore,marketLossBeforeWithdrawal:lossBeforeWithdrawal,
+        inflationBaseAfter:inflationBalance,actualBefore,inflationReset:true
+      };
+    }
+    if(errors.length)return result;
+
+    const monthlyInflation=Number(state.inflationActive[j.jm-1]);
+    const daysInMonth=jalaali.jalaaliMonthLength(j.jy,j.jm);
+    const dailyRate=Math.pow(1+monthlyInflation/100,1/daysInMonth)-1;
+    const balanceBeforeGrowth=inflationBalance;
+    const dailyGrowth=balanceBeforeGrowth*dailyRate;
+    inflationBalance=balanceBeforeGrowth+dailyGrowth;
+    result.dailyRows.push({
+      date,day:j.jd,month:j.jm,monthlyInflation,dailyRate,openingBalance,initialInvestment,
+      deposits:dailyDeposits,withdrawals:dailyWithdrawals,balanceBeforeGrowth,dailyGrowth,
+      closingBalance:inflationBalance,withdrawalFromProfit:dailyProfitWithdrawal,
+      withdrawalFromTaxable:dailyTaxableWithdrawal,withdrawalFromExempt:dailyExemptWithdrawal,
+      inflationReset,marketLossAdjustment
+    });
+  }
+  if(errors.length)return result;
+
+  const actualFinal=Number(p.finalValuation.value);
+  const nominalPrincipalAtEnd=taxablePrincipal+exemptPrincipal;
+  let finalMarketLoss=0;
+  // در تاریخ ارزیابی نیز زیان بازار ابتدا از جدیدترین سرمایه‌ها کسر می‌شود؛ مجموع اصل هرگز از ارزش واقعی نهایی بیشتر نخواهد بود.
+  if(nominalPrincipalAtEnd>actualFinal){
+    finalMarketLoss=applyMarketLoss(nominalPrincipalAtEnd-actualFinal);
+    totalMarketLoss+=finalMarketLoss;
+  }
+
+  const difference=actualFinal-inflationBalance;
+  const realProfit=Math.max(0,difference);
+  const principalKhums=taxablePrincipal/5;
+  const profitKhums=realProfit/5;
+  result.valid=true;result.status="معتبر";
+  result.inflationFinal=inflationBalance;result.actualFinal=actualFinal;
+  result.difference=difference;result.realProfit=realProfit;
+  result.taxablePrincipal=Math.max(0,taxablePrincipal);
+  result.exemptPrincipal=Math.max(0,exemptPrincipal);
+  result.principalKhums=principalKhums;result.profitKhums=profitKhums;
+  result.totalKhums=principalKhums+profitKhums;
+  result.principalMarketLoss=totalMarketLoss;
+  result.finalMarketLoss=finalMarketLoss;
+  result.nominalPrincipalAtEnd=nominalPrincipalAtEnd;
+  return result;
+}
+
+/* =========================================================
+   11. TRANSACTION MANAGEMENT
+   ========================================================= */
+
+function openTransactionModal(type, transactionId = null) {
+  const p = getPortfolio(state.activePortfolioId);
+
+  if (!p) return toast("ابتدا یک سبد را انتخاب کن.");
+
+  $("transactionForm").reset();
+  $("transactionEditId").value = "";
+  $("transactionType").value = type;
+
+  const isDeposit = type === "deposit";
+
+  $("transactionModalTitle").textContent = transactionId
+    ? "ویرایش تراکنش"
+    : (isDeposit ? "ثبت واریز" : "ثبت برداشت");
+
+  $("depositTaxField").classList.toggle("hidden", !isDeposit);
+  $("withdrawalValueField").classList.toggle("hidden", isDeposit);
+
+  $("transactionHint").textContent = isDeposit
+    ? "وضعیت خمس اصل هر واریز به‌صورت مستقل ذخیره می‌شود."
+    : "ارزش واقعی کل سبد پیش از برداشت را وارد کن. اگر ارزش بازار از اصل باقی‌مانده کمتر باشد، زیان ابتدا از واریزهای جدیدتر کسر می‌شود؛ سپس برداشت ابتدا از سود قابل‌برداشت، اصل مشمول و اصل غیرمشمول تخصیص می‌یابد. پس از برداشت، مبنای تورمی از اصل باقی‌مانده دوباره محاسبه می‌شود.";
+
+  $("transactionDate").value = "";
+
+  if (transactionId) {
+    const t = p.transactions.find(x => x.id === transactionId);
+    if (!t) return;
+
+    $("transactionEditId").value = t.id;
+    $("transactionType").value = t.type;
+    $("transactionDate").value = t.date;
+    $("transactionAmount").value = formatNumber(t.amount);
+    $("transactionDescription").value = t.description || "";
+    $("transactionTaxStatus").value = t.taxStatus || "";
+
+    $("withdrawalPortfolioValue").value =
+      t.portfolioValueBefore == null
+        ? ""
+        : formatNumber(t.portfolioValueBefore);
+
+    $("depositTaxField").classList.toggle("hidden", t.type !== "deposit");
+    $("withdrawalValueField").classList.toggle("hidden", t.type !== "withdrawal");
+  }
+
+  attachNumberFormatting($("transactionModal"));
+  openModal("transactionModal");
+}
+
+$("transactionForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const p = getPortfolio(state.activePortfolioId);
+  if (!p) return;
+
+  const editId = $("transactionEditId").value;
+  const type = $("transactionType").value;
+
+  const date = parseJalaliDate($("transactionDate").value);
+  const amount = numberValue($("transactionAmount").value);
+  const description = $("transactionDescription").value.trim();
+
+  if (!date) return toast("تاریخ تراکنش را از تقویم انتخاب کن.");
+
+  if (!isDateInsideKhomsiPeriod(date.normalized)) {
+    return toast("تاریخ تراکنش باید در دوره خمسی فعال باشد.");
+  }
+
+  if (compareDates(date.normalized, p.startDate) < 0) {
+    return toast("تاریخ تراکنش نمی‌تواند قبل از تاریخ شروع سبد باشد.");
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return toast("مبلغ تراکنش باید عددی مثبت باشد.");
+  }
+
+  let taxStatus = null;
+  let portfolioValueBefore = null;
+
+  if (type === "deposit") {
+    taxStatus = $("transactionTaxStatus").value;
+
+    if (!["taxable", "exempt"].includes(taxStatus)) {
+      return toast("وضعیت خمس اصل واریزی را مشخص کن.");
+    }
+  }
+
+  if (type === "withdrawal") {
+    portfolioValueBefore =
+      numberValue($("withdrawalPortfolioValue").value);
+
+    if (!Number.isFinite(portfolioValueBefore) ||
+        portfolioValueBefore < amount) {
+      return toast("ارزش واقعی سبد پیش از برداشت باید معتبر و حداقل برابر مبلغ برداشت باشد.");
+    }
+  }
+
+  const transaction = {
+    id: editId || uid(),
+    type,
+    date: date.normalized,
+    amount,
+    taxStatus,
+    portfolioValueBefore,
+    description,
+    updatedAt: new Date().toISOString()
+  };
+
+  if (editId) {
+    const index = p.transactions.findIndex(t => t.id === editId);
+    if (index < 0) return toast("تراکنش موردنظر پیدا نشد.");
+
+    p.transactions[index] = transaction;
+  } else {
+    p.transactions.push(transaction);
+  }
+
+  /*
+    ترتیب تراکنش‌ها:
+    - ابتدا تاریخ
+    - سپس واریزها
+    - سپس برداشت‌ها
+    - در هر گروه، ترتیب ثبت اولیه حفظ می‌شود.
+  */
+
+  p.transactions.sort((a, b) => {
+    const dateCompare = compareDates(a.date, b.date) || 0;
+
+    if (dateCompare !== 0) return dateCompare;
+
+    if (a.type !== b.type) {
+      return a.type === "deposit" ? -1 : 1;
+    }
+
+    return 0;
+  });
+
+  saveState();
+  closeModal("transactionModal");
+
+  renderPortfolioDetail(p.id);
+
+  toast(editId
+    ? "تراکنش ویرایش و محاسبات وابسته بازسازی شد."
+    : (type === "deposit" ? "واریز ثبت شد." : "برداشت ثبت شد."));
+});
+
+function deleteTransaction(transactionId) {
+  const p = getPortfolio(state.activePortfolioId);
+  if (!p) return;
+
+  if (!confirm("این تراکنش حذف شود؟")) return;
+
+  p.transactions = p.transactions.filter(t => t.id !== transactionId);
+
+  saveState();
+  renderPortfolioDetail(p.id);
+
+  toast("تراکنش حذف شد و محاسبات مجدداً بازسازی شدند.");
+}
+
+/* =========================================================
+   12. PORTFOLIO DETAIL AND KHUMS RESULTS
+   ========================================================= */
+
+function taxStatusLabel(status) {
+  if (status === "taxable") return "مشمول خمس";
+  if (status === "exempt") return "غیرمشمول / خمس پرداخت‌شده";
+  return "نامشخص";
+}
+
+function renderPortfolioDetail(id) {
+  const p = getPortfolio(id);
+  if (!p) return;
+
+  state.activePortfolioId = id;
+  saveState();
+
+  $("detailTitle").textContent = p.name;
+  $("detailSubtitle").textContent = `تاریخ شروع: ${p.startDate}`;
+
+  const deposits = p.transactions
+    .filter(t => t.type === "deposit")
+    .reduce((s, t) => s + Number(t.amount), 0);
+
+  const withdrawals = p.transactions
+    .filter(t => t.type === "withdrawal")
+    .reduce((s, t) => s + Number(t.amount), 0);
+
+  $("detailInitial").textContent = formatMoney(p.initialValue);
+  $("detailDeposits").textContent = formatMoney(deposits);
+  $("detailWithdrawals").textContent = formatMoney(withdrawals);
+
+  $("finalActualValue").value =
+    p.finalValuation ? formatNumber(p.finalValuation.value) : "";
+
+  $("finalActualDate").value =
+    p.finalValuation ? p.finalValuation.date : getKhomsiEndDate();
+
+  // موتور مالی در هر بار نمایش جزئیات، محاسبات را از ابتدا بازسازی می‌کند.
+  const financial = calculatePortfolioFinancials(p);
+
+  const table = $("transactionTable");
+
+  if (!p.transactions.length) {
+    table.innerHTML = `
+      <div class="empty">هنوز تراکنشی برای این سبد ثبت نشده است.</div>
+    `;
+  } else {
+    table.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>تاریخ</th>
+              <th>نوع</th>
+              <th>مبلغ</th>
+              <th>وضعیت خمس اصل</th>
+              <th>ارزش سبد پیش از برداشت</th>
+              <th>برداشت از سود</th>
+              <th>برداشت از اصل مشمول</th>
+              <th>برداشت از اصل غیرمشمول</th>
+              <th>توضیحات</th>
+              <th>عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${p.transactions.map(t => {
+              const allocation = financial.allocations[t.id];
+
+              return `
+                <tr>
+                  <td dir="ltr">${escapeHTML(t.date)}</td>
+
+                  <td><span class="tx-type ${t.type === "deposit" ? "tx-type-deposit" : "tx-type-withdrawal"}">${t.type === "deposit" ? "واریز" : "برداشت"}</span></td>
+
+                  <td class="money">${formatMoney(t.amount)}</td>
+
+                  <td>
+                    ${t.type === "deposit"
+                      ? taxStatusLabel(t.taxStatus)
+                      : "—"}
+                  </td>
+
+                  <td class="money">
+                    ${t.type === "withdrawal"
+                      ? formatMoney(t.portfolioValueBefore)
+                      : "—"}
+                  </td>
+
+                  <td class="money">
+                    ${t.type === "withdrawal"
+                      ? (allocation ? formatMoney(allocation.profit) : "—")
+                      : "—"}
+                  </td>
+
+                  <td class="money">
+                    ${t.type === "withdrawal"
+                      ? (allocation ? formatMoney(allocation.taxable) : "—")
+                      : "—"}
+                  </td>
+
+                  <td class="money">
+                    ${t.type === "withdrawal"
+                      ? (allocation ? formatMoney(allocation.exempt) : "—")
+                      : "—"}
+                  </td>
+
+                  <td>${escapeHTML(t.description || "—")}</td>
+
+                  <td>
+                    <button class="btn btn-small"
+                      onclick="openTransactionModal('${t.type}','${t.id}')">
+                      ویرایش
+                    </button>
+
+                    <button class="btn btn-small btn-danger"
+                      onclick="deleteTransaction('${t.id}')">
+                      حذف
+                    </button>
+                  </td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  // ---------- نمایش نتیجه محاسبات ----------
+
+  const notice = $("calculationNotice");
+
+  if (!financial.valid) {
+    notice.className = "notice";
+    notice.innerHTML = `
+      <strong>وضعیت: غیرقابل محاسبه قطعی</strong>
+      <br>
+      ${financial.errors.map(e => escapeHTML(e)).join("<br>")}
+      <br><br>
+      تا رفع موارد بالا، مبلغ خمس قطعی نمایش داده نمی‌شود.
+    `;
+  } else {
+    notice.className = "notice success";
+
+    notice.innerHTML = `
+      <strong>وضعیت محاسبات: معتبر</strong>
+      <div class="notice info" style="margin:10px 0">پس از هر برداشت، مبنای تورمی از اصل سرمایه باقی‌مانده بازتنظیم می‌شود. همچنین زیان بازار، حتی بدون ثبت برداشت، ابتدا از واریزهای جدیدتر و سپس از سرمایه‌های قدیمی‌تر کسر می‌شود تا اصل باقی‌مانده از ارزش واقعی دارایی بیشتر نباشد.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px">
+
+        <div>
+          <div class="muted">ارزش واقعی نهایی</div>
+          <strong>${formatMoney(financial.actualFinal)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">ارزش تورمی نهایی</div>
+          <strong>${formatMoney(financial.inflationFinal)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">اختلاف ارزش واقعی و تورمی</div>
+          <strong>${formatMoney(financial.difference)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">سود مازاد بر تورم</div>
+          <strong>${formatMoney(financial.realProfit)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">اصل مشمول خمس باقی‌مانده</div>
+          <strong>${formatMoney(financial.taxablePrincipal)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">اصل غیرمشمول خمس باقی‌مانده</div>
+          <strong>${formatMoney(financial.exemptPrincipal)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">کاهش اصل بر اثر زیان بازار</div>
+          <strong>${formatMoney(financial.principalMarketLoss)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">خمس اصل</div>
+          <strong>${formatMoney(financial.principalKhums)} تومان</strong>
+        </div>
+
+        <div>
+          <div class="muted">خمس سود</div>
+          <strong>${formatMoney(financial.profitKhums)} تومان</strong>
+        </div>
+
+        <div style="padding:12px;background:var(--greenSoft);border-radius:10px">
+          <div class="muted">خمس کل قابل پرداخت</div>
+          <strong style="font-size:20px;color:var(--green)">
+            ${formatMoney(financial.totalKhums)} تومان
+          </strong>
+        </div>
+
+      </div>
+      <div style="font-size:10px;margin-top:12px">
+        تعداد روزهای محاسبه‌شده: ${financial.dailyRows.length}
+        | تعداد تراکنش‌ها: ${p.transactions.length}
+      </div>
+    `;
+  }
+
+  showPage("portfolioDetail");
+}
+
+/* =========================================================
+   13. FINAL VALUATION
+   ========================================================= */
+
+function saveFinalValuation() {
+  const p = getPortfolio(state.activePortfolioId);
+  if (!p) return;
+
+  const value = numberValue($("finalActualValue").value);
+  const date = parseJalaliDate($("finalActualDate").value);
+  const expectedDate = getKhomsiEndDate();
+
+  if (!Number.isFinite(value) || value < 0) {
+    return toast("ارزش واقعی باید عدد معتبر و غیرمنفی باشد.");
+  }
+
+  if (!date) return toast("تاریخ ارزیابی معتبر نیست.");
+
+  if (date.normalized !== expectedDate) {
+    return toast(`تاریخ ارزیابی نهایی باید ${expectedDate} باشد.`);
+  }
+
+  p.finalValuation = {
+    value,
+    date: expectedDate,
+    savedAt: new Date().toISOString()
+  };
+
+  saveState();
+  renderPortfolioDetail(p.id);
+
+  toast("ارزش واقعی نهایی ثبت شد و محاسبات خمس بازسازی شدند.");
+}
+
+
+/* =========================================================
+   14. EXCEL EXPORT MODULE
+   خروجی جامع: Summary + یک شیت برای هر سبد
+   ========================================================= */
+
+
+
+function excelSafeSheetName(name, usedNames) {
+  let base = String(name || "سبد")
+    .replace(/[\\/?*\[\]:]/g, "-")
+    .trim()
+    .slice(0, 25) || "سبد";
+  let candidate = base;
+  let index = 2;
+  while (usedNames.has(candidate.toLowerCase())) {
+    const suffix = `-${index++}`;
+    candidate = base.slice(0, 31 - suffix.length) + suffix;
+  }
+  usedNames.add(candidate.toLowerCase());
+  return candidate;
+}
+
+function excelDateForMonth(year, monthNumber, day) {
+  return `${year}/${String(monthNumber).padStart(2,"0")}/${String(day).padStart(2,"0")}`;
+}
+
+function excelCell(value, type) {
+  if (value === null || value === undefined || value === "") return {v:"", t:"s"};
+  if (typeof value === "number" && Number.isFinite(value)) return {v:value, t:"n", z:'#,##0.##;[Red]-#,##0.##'};
+  return {v:String(value), t:"s"};
+}
+
+function addExcelRow(ws, rowIndex, startColumn, values) {
+  values.forEach((value, index) => {
+    const cell = excelCell(value);
+    ws[XLSX.utils.encode_cell({r:rowIndex,c:startColumn+index})] = cell;
+  });
+}
+
+function setExcelMerge(ws, range) {
+  if (!ws['!merges']) ws['!merges'] = [];
+  ws['!merges'].push(range);
+}
+
+function buildPortfolioExcelSheet(p, financial) {
+  const ws={},merges=[],cols=[];
+  const excelMonths=getKhomsiMonthEntries();
+  const blockWidth=10,gapWidth=1;
+  const totalWidth=excelMonths.length*(blockWidth+gapWidth)-gapWidth;
+  const monthBlocks=[];
+  const thinGray={style:"thin",color:{rgb:"B8C2CC"}};
+  const mediumBlue={style:"medium",color:{rgb:"7BAFCB"}};
+  const greenFill={patternType:"solid",fgColor:{rgb:"E5F4E9"}};
+  const orangeFill={patternType:"solid",fgColor:{rgb:"FFF0DF"}};
+  const silverFill={patternType:"solid",fgColor:{rgb:"E9ECEF"}};
+  const blueFill={patternType:"solid",fgColor:{rgb:"DDF1FA"}};
+  const headerFill={patternType:"solid",fgColor:{rgb:"EAF5FA"}};
+  const titleFill={patternType:"solid",fgColor:{rgb:"D9EDF7"}};
+  const center={horizontal:"center",vertical:"center",wrapText:true};
+  addExcelRow(ws,0,0,[`گزارش جامع سبد: ${p.name}`]);
+  merges.push({s:{r:0,c:0},e:{r:0,c:totalWidth-1}});
+  addExcelRow(ws,1,0,[`خمس نهایی قابل پرداخت: ${financial.valid?formatNumber(financial.totalKhums):"غیرقابل محاسبه قطعی"} تومان`]);
+  merges.push({s:{r:1,c:0},e:{r:1,c:Math.min(5,totalWidth-1)}});
+  addExcelRow(ws,2,0,[`دوره خمسی: ${getKhomsiStartDate()} تا ${getKhomsiEndDate()}`,`ارزش اولیه: ${Number(p.initialValue)||0}`,`تاریخ شروع: ${p.startDate}`,`وضعیت خمس اولیه: ${taxStatusLabel(p.initialTaxStatus)}`]);
+
+  const dailyByDate=new Map((financial.dailyRows||[]).map(row=>[row.date,row]));
+  const txByDate=new Map();
+  (p.transactions||[]).forEach(t=>{if(!txByDate.has(t.date))txByDate.set(t.date,[]);txByDate.get(t.date).push(t);});
+  const actualCheckpoints=new Map();
+  function pushCheckpoint(date,value,label){if(!actualCheckpoints.has(date))actualCheckpoints.set(date,[]);actualCheckpoints.get(date).push(`${formatNumber(value)}${label?` (${label})`:''}`);}
+  pushCheckpoint(p.startDate,Number(p.initialValue),"ارزش اولیه ثبت‌شده");
+  (p.transactions||[]).filter(t=>t.type==='withdrawal').forEach(t=>pushCheckpoint(t.date,Number(t.portfolioValueBefore),"ارزش پیش از برداشت"));
+
+  let row=3;
+  addExcelRow(ws,row,0,["جدول یکپارچه روزانه ـ سبد اصلی و سبد تورمی (ماه‌ها در کنار یکدیگر)"]);
+  merges.push({s:{r:row,c:0},e:{r:row,c:totalWidth-1}});row++;
+  excelMonths.forEach((month,monthIndex)=>{
+    const startCol=monthIndex*(blockWidth+gapWidth);
+    const year=month.year;
+    const monthTitleRow=row,headerRow=row+1,firstDayRow=row+2;
+    addExcelRow(ws,monthTitleRow,startCol,[`${month.name} ${year} · روزهای ${month.firstDay} تا ${month.lastDay}`]);
+    merges.push({s:{r:monthTitleRow,c:startCol},e:{r:monthTitleRow,c:startCol+blockWidth-1}});
+    addExcelRow(ws,headerRow,startCol,["روز","تاریخ","سرمایه اولیه","واریز","برداشت","ارزش واقعی ثبت‌شده","نرخ تورم روزانه (%)","تغییرات تورمی","ارزش تورمی پایان روز","بازتنظیم مبنا"]);
+    [7,14,17,17,17,25,18,18,21,15].forEach((w,i)=>cols[startCol+i]={wch:w});
+    for(let day=month.firstDay;day<=month.lastDay;day++){
+      const date=excelDateForMonth(year,month.number,day);
+      const events=txByDate.get(date)||[];
+      const daily=dailyByDate.get(date);
+      const deposits=events.filter(t=>t.type==='deposit').reduce((sum,t)=>sum+Number(t.amount),0);
+      const withdrawals=events.filter(t=>t.type==='withdrawal').reduce((sum,t)=>sum+Number(t.amount),0);
+      const checkpoints=actualCheckpoints.get(date)||[];
+      const excelRow=firstDayRow+(day-month.firstDay);
+      addExcelRow(ws,excelRow,startCol,[
+        day,date,daily?.initialInvestment||"",deposits||"",withdrawals||"",checkpoints.length?checkpoints.join(" | "):"",
+        daily?daily.dailyRate*100:"",daily?daily.dailyGrowth:"",daily?daily.closingBalance:"",
+        daily&&daily.inflationReset?"بله":""
+      ]);
+      // برداشت اولویت رنگی دارد؛ واریزهای روزانه سبز می‌شوند.
+      const rowFill=events.some(t=>t.type==='withdrawal')?orangeFill:(events.some(t=>t.type==='deposit')||Number(daily?.initialInvestment)>0?greenFill:null);
+      if(rowFill){
+        for(let c=startCol;c<startCol+blockWidth;c++){
+          const cell=ws[XLSX.utils.encode_cell({r:excelRow,c})]||{v:"",t:"s"};
+          cell.s={...(cell.s||{}),fill:rowFill};
+          ws[XLSX.utils.encode_cell({r:excelRow,c})]=cell;
+        }
+      }
+    }
+    monthBlocks.push({startCol,endCol:startCol+blockWidth-1,titleRow:monthTitleRow,headerRow,firstDayRow,lastDayRow:firstDayRow+(month.lastDay-month.firstDay)});
+  });
+
+  row+=34;
+  addExcelRow(ws,row,0,["خلاصه نهایی محاسبات خمس"]);merges.push({s:{r:row,c:0},e:{r:row,c:5}});row++;
+  const summaryRows=[
+    ["وضعیت محاسبات",financial.status],
+    ["کاهش اصل بر اثر زیان بازار (تومان)",financial.principalMarketLoss],
+    ["ارزش واقعی نهایی (تومان)",financial.actualFinal],
+    ["ارزش تورمی نهایی مبنای باقی‌مانده (تومان)",financial.inflationFinal],
+    ["اختلاف ارزش واقعی و تورمی (تومان)",financial.difference],
+    ["سود مازاد بر تورم (تومان)",financial.realProfit],
+    ["اصل مشمول خمس باقی‌مانده (تومان)",financial.taxablePrincipal],
+    ["اصل غیرمشمول خمس باقی‌مانده (تومان)",financial.exemptPrincipal],
+    ["خمس اصل (تومان)",financial.principalKhums],
+    ["خمس سود (تومان)",financial.profitKhums],
+    ["خمس کل (تومان)",financial.totalKhums],
+    ["جمع واریزها (تومان)",financial.depositsTotal],
+    ["جمع برداشت‌ها (تومان)",financial.withdrawalsTotal],
+    ["تعداد تراکنش‌ها",(p.transactions||[]).length],
+    ["تعداد روزهای محاسبه‌شده",(financial.dailyRows||[]).length]
+  ];
+  summaryRows.forEach((values,index)=>addExcelRow(ws,row+index,0,values));
+  row+=summaryRows.length+2;
+  addExcelRow(ws,row,0,["دفتر تفصیلی تراکنش‌ها"]);merges.push({s:{r:row,c:0},e:{r:row,c:9}});row++;
+  addExcelRow(ws,row,0,["تاریخ","نوع","مبلغ","وضعیت خمس واریز","ارزش واقعی پیش از برداشت","برداشت از سود","برداشت از اصل مشمول","برداشت از اصل غیرمشمول","اصل اسمی پیش از برداشت","کاهش اصل بابت زیان بازار","اصل تعدیل‌شده پیش از برداشت","اصل باقی‌مانده پس از برداشت","توضیحات","شناسه"]);row++;
+  const sortedTransactions=[...(p.transactions||[])].sort((a,b)=>(compareDates(a.date,b.date)||0));
+  sortedTransactions.forEach(t=>{
+    const a=financial.allocations?.[t.id];
+    addExcelRow(ws,row++,0,[t.date,t.type==='deposit'?'واریز':'برداشت',Number(t.amount),t.type==='deposit'?taxStatusLabel(t.taxStatus):'—',t.type==='withdrawal'?Number(t.portfolioValueBefore):'',a?.profit??'',a?.taxable??'',a?.exempt??'',a?.nominalPrincipalBefore??'',a?.marketLossBeforeWithdrawal??'',a?.adjustedPrincipalBefore??'',a?.inflationBaseAfter??'',t.description||'',t.id]);
+  });
+  if(financial.errors?.length){row+=2;addExcelRow(ws,row,0,["موارد نیازمند بررسی"]);financial.errors.forEach((message,index)=>addExcelRow(ws,row+index+1,0,[index+1,message]));}
+
+  ws['!merges']=merges;ws['!cols']=cols;ws['!freeze']={xSplit:0,ySplit:6};ws['!sheetViews']=[{showGridLines:false}];
+  ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:row+Math.max(sortedTransactions.length,financial.errors?.length||0)+3,c:totalWidth-1}});
+  const range=XLSX.utils.decode_range(ws['!ref']);
+  // وسط‌چین‌کردن تمام سلول‌ها و اعمال قالب عددی
+  for(let r=0;r<=range.e.r;r++)for(let c=0;c<=range.e.c;c++){
+    const address=XLSX.utils.encode_cell({r,c});
+    const cell=ws[address]||{v:"",t:"s"};
+    cell.s={...(cell.s||{}),alignment:center};
+    if(cell.t==='n')cell.z='#,##0.##;[Red]-#,##0.##';
+    ws[address]=cell;
+  }
+  // سلول برجسته خمس نهایی در بالای هر شیت
+  const finalKhumsCell=ws['A2']||{v:"",t:"s"};
+  finalKhumsCell.s={...(finalKhumsCell.s||{}),fill:{patternType:"solid",fgColor:{rgb:"FFF2B2"}},font:{bold:true,color:{rgb:"6B5200"},sz:13},alignment:center,border:{top:{style:"medium",color:{rgb:"D6B656"}},bottom:{style:"medium",color:{rgb:"D6B656"}}}};
+  ws['A2']=finalKhumsCell;
+  for(let c=1;c<=Math.min(5,totalWidth-1);c++){
+    const address=XLSX.utils.encode_cell({r:1,c});
+    ws[address]={...(ws[address]||{v:"",t:"s"}),s:{fill:{patternType:"solid",fgColor:{rgb:"FFF2B2"}},border:{top:{style:"medium",color:{rgb:"D6B656"}},bottom:{style:"medium",color:{rgb:"D6B656"}}}}};
+  }
+  // ستون‌های فاصله بین ماه‌ها به‌صورت یکپارچه نقره‌ای/خاکستری روشن
+  for(let i=0;i<excelMonths.length-1;i++){
+    const gapCol=i*(blockWidth+gapWidth)+blockWidth;
+    cols[gapCol]={wch:3};
+    for(let r=0;r<=range.e.r;r++){
+      const address=XLSX.utils.encode_cell({r,c:gapCol});
+      ws[address]={...(ws[address]||{v:"",t:"s"}),s:{fill:silverFill,alignment:center}};
+    }
+  }
+  // قاب‌های ماهانه: دور عنوان ماه، سرفصل‌ها و لبه‌های بیرونی هر بلوک تا تشخیص ماه هنگام اسکرول آسان باشد.
+  monthBlocks.forEach(block=>{
+    for(let c=block.startCol;c<=block.endCol;c++){
+      for(const r of [block.titleRow,block.headerRow]){
+        const address=XLSX.utils.encode_cell({r,c});
+        const cell=ws[address]||{v:"",t:"s"};
+        cell.s={...(cell.s||{}),fill:r===block.titleRow?titleFill:headerFill,
+          border:{top:mediumBlue,bottom:mediumBlue,left:c===block.startCol?mediumBlue:thinGray,right:c===block.endCol?mediumBlue:thinGray},
+          font:{bold:true,color:{rgb:"24465A"}},alignment:center};
+        ws[address]=cell;
+      }
+    }
+    for(let r=block.firstDayRow;r<=block.lastDayRow;r++){
+      for(const c of [block.startCol,block.endCol]){
+        const address=XLSX.utils.encode_cell({r,c});
+        const cell=ws[address]||{v:"",t:"s"};
+        cell.s={...(cell.s||{}),border:{...(cell.s?.border||{}),left:c===block.startCol?mediumBlue:undefined,right:c===block.endCol?mediumBlue:undefined}};
+        ws[address]=cell;
+      }
+    }
+  });
+  // قاب عنوان‌های بخش‌های پایین گزارش
+  for(let r=0;r<=range.e.r;r++){
+    const first=ws[XLSX.utils.encode_cell({r,c:0})];
+    if(first&&typeof first.v==='string'&&(/خلاصه نهایی محاسبات خمس|دفتر تفصیلی تراکنش‌ها|موارد نیازمند بررسی/.test(first.v))){
+      for(let c=0;c<Math.min(12,totalWidth);c++){
+        const address=XLSX.utils.encode_cell({r,c});
+        const cell=ws[address]||{v:"",t:"s"};
+        cell.s={...(cell.s||{}),fill:blueFill,border:{top:mediumBlue,bottom:mediumBlue},font:{bold:true,color:{rgb:"24465A"}},alignment:center};
+        ws[address]=cell;
+      }
+    }
+  }
+  return ws;
+}
+
+function exportAllPortfoliosToExcel() {
+  if (!window.XLSX) {
+    return toast("کتابخانه ساخت اکسل بارگذاری نشده است. اتصال اینترنت را بررسی و صفحه را دوباره بارگذاری کن.");
+  }
+  if (!state.portfolios.length) return toast("برای خروجی اکسل ابتدا حداقل یک سبد ایجاد کن.");
+
+  try {
+    const workbook = XLSX.utils.book_new();
+    const summary = [];
+    const calculated = getAllPortfolioFinancials();
+    const validItems = calculated.filter(item => item.financial.valid);
+    const invalidItems = calculated.filter(item => !item.financial.valid);
+
+    const totals = {
+      initial: 0, deposits: 0, withdrawals: 0, actual: 0, inflation: 0,
+      difference: 0, realProfit: 0, taxable: 0, exempt: 0, marketLoss: 0,
+      principalKhums: 0, profitKhums: 0, totalKhums: 0, transactions: 0
+    };
+
+    calculated.forEach(({portfolio, financial}) => {
+      totals.initial += Number(portfolio.initialValue) || 0;
+      totals.deposits += Number(financial.depositsTotal) || 0;
+      totals.withdrawals += Number(financial.withdrawalsTotal) || 0;
+      totals.transactions += (portfolio.transactions || []).length;
+      if (financial.valid) {
+        totals.actual += Number(financial.actualFinal) || 0;
+        totals.inflation += Number(financial.inflationFinal) || 0;
+        totals.difference += Number(financial.difference) || 0;
+        totals.realProfit += Number(financial.realProfit) || 0;
+        totals.taxable += Number(financial.taxablePrincipal) || 0;
+        totals.exempt += Number(financial.exemptPrincipal) || 0;
+        totals.marketLoss += Number(financial.principalMarketLoss) || 0;
+        totals.principalKhums += Number(financial.principalKhums) || 0;
+        totals.profitKhums += Number(financial.profitKhums) || 0;
+        totals.totalKhums += Number(financial.totalKhums) || 0;
+      }
+    });
+
+    summary.push(["گزارش جامع خمسیلیزیشن | Khomsilization"]);
+    summary.push([`خمس نهایی قابل پرداخت: ${validItems.length?formatNumber(totals.totalKhums):"غیرقابل محاسبه قطعی"} تومان`]);
+    summary.push(["دوره خمسی",getKhomsiStartDate(),"تا",getKhomsiEndDate()]);
+    summary.push(["واحد تمام مبالغ","تومان"]);
+    summary.push(["توضیح جمع کل", invalidItems.length
+      ? `جمع خمس فقط برای ${validItems.length} سبد معتبر محاسبه شده؛ ${invalidItems.length} سبد به علت نقص اطلاعات در جمع قطعی لحاظ نشده است.`
+      : "تمام سبدها دارای اطلاعات معتبر هستند و جمع خمس قطعی همه سبدها محاسبه شده است."]);
+    summary.push([
+      "نام سبد","وضعیت محاسبات","ارزش اولیه","جمع واریزها","جمع برداشت‌ها",
+      "ارزش واقعی نهایی","ارزش تورمی نهایی","اختلاف","سود مازاد بر تورم",
+      "اصل مشمول باقی‌مانده","اصل غیرمشمول باقی‌مانده","کاهش اصل بر اثر زیان بازار","خمس اصل","خمس سود","خمس کل","تعداد تراکنش","جزئیات وضعیت"
+    ]);
+
+    // ردیف تجمیعی در ابتدای شیت؛ مبالغ خمس فقط از سبدهای معتبر جمع می‌شوند.
+    summary.push([
+      "جمع کل سبدها", invalidItems.length ? `جمع خمس ${validItems.length} سبد معتبر` : "جمع قطعی همه سبدها",
+      totals.initial, totals.deposits, totals.withdrawals,
+      validItems.length ? totals.actual : "", validItems.length ? totals.inflation : "",
+      validItems.length ? totals.difference : "", validItems.length ? totals.realProfit : "",
+      validItems.length ? totals.taxable : "", validItems.length ? totals.exempt : "",
+      validItems.length ? totals.marketLoss : "", validItems.length ? totals.principalKhums : "", validItems.length ? totals.profitKhums : "",
+      validItems.length ? totals.totalKhums : "", totals.transactions,
+      invalidItems.length ? `${invalidItems.length} سبد نیازمند بررسی است.` : "بدون مورد ناقص"
+    ]);
+
+    const usedNames = new Set(["summary"]);
+
+    calculated.forEach(({portfolio, financial}) => {
+      const statusText = financial.valid ? "معتبر" : "غیرقابل محاسبه قطعی";
+      summary.push([
+        portfolio.name,
+        statusText,
+        Number(portfolio.initialValue)||0,
+        financial.depositsTotal||0,
+        financial.withdrawalsTotal||0,
+        financial.actualFinal ?? "",
+        financial.inflationFinal ?? "",
+        financial.difference ?? "",
+        financial.realProfit ?? "",
+        financial.taxablePrincipal ?? "",
+        financial.exemptPrincipal ?? "",
+        financial.principalMarketLoss ?? "",
+        financial.principalKhums ?? "",
+        financial.profitKhums ?? "",
+        financial.totalKhums ?? "",
+        (portfolio.transactions||[]).length,
+        (financial.errors||[]).join(" | ")
+      ]);
+
+      const sheetName = excelSafeSheetName(portfolio.name,usedNames);
+      XLSX.utils.book_append_sheet(workbook,buildPortfolioExcelSheet(portfolio,financial),sheetName);
+    });
+
+    const summarySheet = XLSX.utils.aoa_to_sheet(summary);
+    summarySheet['!cols'] = [
+      {wch:24},{wch:29},{wch:19},{wch:19},{wch:19},{wch:21},{wch:21},{wch:21},
+      {wch:22},{wch:23},{wch:25},{wch:25},{wch:18},{wch:18},{wch:18},{wch:16},{wch:70}
+    ];
+    // تمام سلول‌های شیت خلاصه نیز وسط‌چین می‌شوند و اعداد جداکننده سه‌رقمی می‌گیرند.
+    const range = XLSX.utils.decode_range(summarySheet['!ref']);
+    for (let r = 0; r <= range.e.r; r++) {
+      for (let c = 0; c <= range.e.c; c++) {
+        const address = XLSX.utils.encode_cell({r,c});
+        const cell = summarySheet[address];
+        if (!cell) continue;
+        cell.s = {...(cell.s || {}), alignment:{horizontal:"center",vertical:"center",wrapText:true}};
+        if (cell.t === "n") cell.z = '#,##0.##;[Red]-#,##0.##';
+        if (r === 5) cell.s = {...cell.s, fill:{patternType:"solid",fgColor:{rgb:"DDF1FA"}}, font:{bold:true,color:{rgb:"24465A"}}, border:{top:{style:"thin",color:{rgb:"7BAFCB"}},bottom:{style:"thin",color:{rgb:"7BAFCB"}}}};
+        if (r === 6) cell.s = {...cell.s, fill:{patternType:"solid",fgColor:{rgb:"EAF5FA"}}, font:{bold:true,color:{rgb:"24465A"}}, border:{bottom:{style:"thin",color:{rgb:"7BAFCB"}}}};
+      }
+    }
+    summarySheet['!freeze'] = {xSplit:0,ySplit:7};
+    const topKhums=summarySheet['A2'];
+    if(topKhums) topKhums.s={...(topKhums.s||{}),fill:{patternType:"solid",fgColor:{rgb:"FFF2B2"}},font:{bold:true,color:{rgb:"6B5200"},sz:13},alignment:{horizontal:"center",vertical:"center",wrapText:true},border:{top:{style:"medium",color:{rgb:"D6B656"}},bottom:{style:"medium",color:{rgb:"D6B656"}}}};
+    XLSX.utils.book_append_sheet(workbook,summarySheet,"Summary");
+    workbook.SheetNames = ["Summary", ...workbook.SheetNames.filter(name => name !== "Summary")];
+
+    const now = new Date();
+    const stamp = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+    XLSX.writeFile(workbook,`Khomsilization_${stamp}.xlsx`,{compression:true});
+    toast(invalidItems.length
+      ? `فایل اکسل ساخته شد؛ خمس ${validItems.length} سبد معتبر جمع شده و ${invalidItems.length} سبد در بخش موارد نیازمند بررسی مشخص شده است.`
+      : "فایل اکسل ساخته شد و جمع کل خمس همه سبدها در شیت اول قرار گرفت.");
+  } catch(error) {
+    console.error("Excel export error:",error);
+    toast("ساخت فایل اکسل با خطا روبه‌رو شد. کنسول مرورگر را بررسی کن.");
+  }
+}
+
+/* =========================================================
+   15. APPLICATION INITIALIZATION
+   ========================================================= */
+
+function initialize() {
+  if (!window.jalaali) {
+    console.error("jalaali-js is not loaded");
+    toast("کتابخانه تقویم شمسی بارگذاری نشده است.");
+  }
+  setTheme(state.theme || "light");
+  attachNumberFormatting(document);
+  renderInflation();
+  renderDashboard();
+  renderPortfolios();
+}
+
+
+initialize();
+</script>
+</body>
+</html>
